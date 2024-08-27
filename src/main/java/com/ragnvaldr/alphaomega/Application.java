@@ -18,10 +18,16 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-package alphaomega;
+package com.ragnvaldr.alphaomega;
 
-public final class App {
-    public static void main(String[] args) {
-        System.out.println("Alpha Omega");
-    }
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+
 }
