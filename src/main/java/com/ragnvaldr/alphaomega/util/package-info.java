@@ -18,51 +18,8 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+@NonNullFields
+@NonNullApi
 package com.ragnvaldr.alphaomega.util;
 
-import org.springframework.lang.Nullable;
-
-public final class Either<T, S> {
-
-    private @Nullable T left;
-    private @Nullable S right;
-
-    private Either(@Nullable T left, @Nullable S right) {
-        this.left = left;
-        this.right = right;
-    }
-
-    public boolean isLeft() {
-        return left != null;
-    }
-
-    public boolean isRight() {
-        return right != null;
-    }
-
-    public static <T, S> Either<T, S> left(T value) {
-        return new Either<>(value, null);
-    }
-
-    public static <T, S> Either<T, S> right(S value) {
-        return new Either<>(null, value);
-    }
-
-    public @Nullable T getLeft() {
-        return left;
-    }
-
-    public @Nullable S getRight() {
-        return right;
-    }
-
-    @SuppressWarnings("null")
-    public static <T> T getLeftOrRight(Either<T, T> value) {
-        if (value.isLeft()) {
-            return value.getLeft();
-        } else {
-            return value.getRight();
-        }
-    }
-}
-
+import org.springframework.lang.*;
