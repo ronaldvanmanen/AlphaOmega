@@ -20,30 +20,41 @@
 
 package com.ragnvaldr.alphaomega.regex;
 
-import com.ragnvaldr.alphaomega.Scanner;
+import java.util.stream.*;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.*;
 
-public final class StringPattern extends Pattern {
-    
-    private String string;
+@SpringBootTest
+public class PatternTests {
 
-    public StringPattern(String string) {
-        this.string = string;
+    @Test
+    void parseAnyCharacter() {
+        var pattern = Pattern.parse(".");
+        assertFalse(pattern.matches("\n"));
+        chars().filter(s -> s == "\n").forEach(c -> {
+            assertTrue(pattern.matches(c));
+        });
     }
 
-    @Override
-    public boolean matches(Scanner scanner) {
-        var position = scanner.getPosition();
-        for (var index = 0; index < string.length(); ++index) {
-            var character = scanner.read();
-            if (character == -1 || character != string.charAt(index)) {
-                scanner.setPosition(position);
-                return false;
-            }
-        }
-        return true;
+    @Test
+    void parseLiteralCharacter() {
+        var pattern = Pattern.parse("a");
+        assertTrue(pattern.matches("a"));
     }
 
-    public static StringPattern emptyString() {
-        return new StringPattern("");
+    @Test
+    void parseNewlineCharacter() {
+        var pattern = Pattern.parse("\\n");
+        assertTrue(pattern.matches("\n"));
+        chars().filter(s -> s == "\n").forEach(c -> {
+            assertFalse(pattern.matches(c));
+        });
+    }
+
+    Stream<String> chars() {
+        return IntStream
+            .range(Character.MIN_VALUE, Character.MAX_VALUE)
+            .mapToObj(value -> String.valueOf((char) value));
     }
 }

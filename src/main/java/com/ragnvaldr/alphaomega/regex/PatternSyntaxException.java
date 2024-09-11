@@ -20,30 +20,8 @@
 
 package com.ragnvaldr.alphaomega.regex;
 
-import com.ragnvaldr.alphaomega.Scanner;
-
-public final class StringPattern extends Pattern {
-    
-    private String string;
-
-    public StringPattern(String string) {
-        this.string = string;
-    }
-
-    @Override
-    public boolean matches(Scanner scanner) {
-        var position = scanner.getPosition();
-        for (var index = 0; index < string.length(); ++index) {
-            var character = scanner.read();
-            if (character == -1 || character != string.charAt(index)) {
-                scanner.setPosition(position);
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static StringPattern emptyString() {
-        return new StringPattern("");
+public final class PatternSyntaxException extends IllegalArgumentException {
+    public PatternSyntaxException(String message) {
+        super(message);
     }
 }
