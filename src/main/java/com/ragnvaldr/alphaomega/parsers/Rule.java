@@ -24,7 +24,7 @@ import com.ragnvaldr.alphaomega.Scanner;
 
 public final class Rule<T> implements Parser<T> {
     
-    private Parser<T> _parser = new NullParser<>();
+    private Parser<T> _parser = new NothingParser<>();
     
     public ParseResult<T> parse(Scanner scanner) {
         return _parser.parse(scanner);

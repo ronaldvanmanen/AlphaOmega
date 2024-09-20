@@ -22,7 +22,7 @@ package com.ragnvaldr.alphaomega.parsers;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-public final class NullParser<T> implements Parser<T> {
+final class NothingParser<T> implements Parser<T> {
     
     public ParseResult<T> parse(Scanner scanner) {
         return ParseResult.failure();
