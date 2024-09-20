@@ -22,7 +22,7 @@ package com.ragnvaldr.alphaomega.regex;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-public final class NullPattern extends Pattern {
+final class NothingPattern extends Pattern {
     
     @Override
     public boolean matches(Scanner scanner) {
