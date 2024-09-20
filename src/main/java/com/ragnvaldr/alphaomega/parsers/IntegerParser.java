@@ -22,7 +22,7 @@ package com.ragnvaldr.alphaomega.parsers;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-public final class IntegerParser implements Parser<Integer> {
+final class IntegerParser implements Parser<Integer> {
 
     private boolean signed;
 
@@ -129,9 +129,5 @@ public final class IntegerParser implements Parser<Integer> {
                 || (character >= 'a' && character < 'a' + radix - 10)
                 || (character >= 'A' && character < 'A' + radix - 10);
         }
-    }
-
-    public static IntegerParser unsigned() {
-        return new IntegerParser(false);
     }
 }

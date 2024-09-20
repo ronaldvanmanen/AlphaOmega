@@ -20,123 +20,95 @@
 
 package com.ragnvaldr.alphaomega.regex;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.stream.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.springframework.lang.Nullable;
 import com.ragnvaldr.alphaomega.*;
 import com.ragnvaldr.alphaomega.parsers.*;
 import com.ragnvaldr.alphaomega.util.*;
 
-public final class PatternParser implements Parser<Pattern> {
+import static com.ragnvaldr.alphaomega.parsers.Parsers.*;
+
+final class PatternParser implements Parser<Pattern> {
 
     private final Rule<Pattern> regex = new Rule<>();
 
     private final Rule<Pattern> alternation = new Rule<>();
 
-    private final Rule<Pattern> expr = new Rule<>();
+    private final Rule<Pattern> branch = new Rule<>();
 
-    private final Rule<Pattern> element = new Rule<>();
+    private final Rule<Pattern> piece = new Rule<>();
 
     private final Rule<Quantifier> quantifier = new Rule<>();
 
-    private final Rule<Quantifier> quantity = new Rule<>();
+    private final Rule<Range> quantity = new Rule<>();
 
-    private final Rule<Quantifier> quantRange = new Rule<>();
+    private final Rule<Range> quantityRange = new Rule<>();
 
-    private final Rule<Quantifier> quantMin = new Rule<>();
+    private final Rule<Range> quantityMinRange = new Rule<>();
 
-    private final Rule<Quantifier> quantExact = new Rule<>();
+    private final Rule<Range> quantityExact = new Rule<>();
 
     private final Rule<Pattern> atom = new Rule<>();
     
-    private final Rule<Pattern> normalChar = new Rule<>();
+    private final Rule<Pattern> normalCharacter = new Rule<>();
 
-    private final Rule<Pattern> charClass = new Rule<>();
+    private final Rule<Pattern> escapedCharacter = new Rule<>();
 
-    private final Rule<Pattern> charClassExpr = new Rule<>();
+    private final Rule<Pattern> characterType = new Rule<>();
+    
+    private final Rule<Pattern> characterClass = new Rule<>();
 
-    private final Rule<Pattern> charGroup = new Rule<>();
+    private final Rule<Pattern> characterGroup = new Rule<>();
 
-    private final Rule<Pattern> posCharGroup = new Rule<>();
+    private final Rule<CharacterPattern> characterRange = new Rule<>();
 
-    private final Rule<Pattern> negCharGroup = new Rule<>();
-
-    private final Rule<Pattern> charClassSub = new Rule<>();
-
-    private final Rule<Pattern> charRange = new Rule<>();
-
-    private final Rule<Pattern> charClassEsc = new Rule<>();
-
-    private final Rule<Pattern> wildcardEsc = new Rule<>();
+    private final Rule<Character> character = new Rule<>();
 
     public PatternParser() {
 
-        regex.assign(
-            new TransformParser<>(
-                new OptionalParser<>(
-                    alternation
-                ),
-                match -> match.orElseGet(
-                    StringPattern::emptyString
-                )
+        regex.is(
+            transform(
+                optional(alternation), pattern -> pattern.orElseGet(Patterns::emptyString)
             )
         );
 
-        alternation.assign(
-            new TransformParser<>(
-                new SequenceParser<>(
-                    expr,
-                    new KleeneStarParser<>(
-                        new TransformParser<>(
-                            new SequenceParser<>(
-                                new CharacterParser('|'),
-                                new OptionalParser<>(expr)
-                            ),
-                            Pair::second
+        alternation.is(
+            transform(
+                sequence(branch,
+                    zeroOrMore(
+                        transform(
+                            sequence(literal('|'), optional(branch)), Pair::second
                         )
                     )
                 ),
                 match -> {
                     var head = match.first();
-                    var tail = match.second()
-                        .stream()
-                        .map(optionalPattern ->
-                            optionalPattern.orElseGet(
-                                StringPattern::emptyString
-                            )
-                        )
-                        .collect(Collectors.toList());
-
-                    if (tail.isEmpty()) {
+                    var tail = match.second();
+                    if (tail.size() == 0) {
                         return head;
                     }
 
-                    tail.addFirst(head);
+                    var patterns = Stream.concat(
+                        Stream.of(head), tail.stream().map(p -> p.orElseGet(Patterns::emptyString))
+                    )
+                    .collect(Collectors.toList());
 
-                    return new AlternativePattern(tail);
+                    return Patterns.oneOf(patterns);
                 }
             )
         );
 
-        expr.assign(
-            new TransformParser<>(
-                new KleenePlusParser<>(
-                    element
-                ),
-                patterns -> {
-                    return new SequencePattern(patterns);
-                }
+        branch.is(
+            transform(
+                oneOrMore(piece), patterns -> Patterns.sequence(patterns)
             )
         );
 
-        element.assign(
-            new TransformParser<>(
-                new SequenceParser<>(
-                    atom,
-                    new OptionalParser<>(quantifier)
+        piece.is(
+            transform(
+                sequence(
+                    atom, optional(quantifier)
                 ),
                 match -> {
                     var atom = match.first();
@@ -148,17 +120,14 @@ public final class PatternParser implements Parser<Pattern> {
 
                     var quantifier = optionalQuantifier.get();
                     switch (quantifier.getType()) {
-                        case KLEENE_PLUS:
-                            return new RepeatPattern(atom, 1, Integer.MAX_VALUE);
-                        case KLEENE_STAR:
-                            return new RepeatPattern(atom, 0, Integer.MAX_VALUE);
-                        case OPTIONAL:
-                            return new RepeatPattern(atom, 0, 1);
+                        case OPTIONAL: return Patterns.zeroOrOne(atom);
+                        case ZERO_OR_MORE: return Patterns.zeroOrMore(atom);
+                        case ONE_OR_MORE: return Patterns.oneOrMore(atom);
                         case RANGE:
                             var range = quantifier.getRange();
                             var minimum = range.getMinimum();
                             var maximum = range.getMaximum();
-                            return new RepeatPattern(atom, minimum, maximum);
+                            return Patterns.repeat(atom, minimum, maximum);
                         default:
                             throw new PatternSyntaxException("Invalid range");
                     }
@@ -166,219 +135,128 @@ public final class PatternParser implements Parser<Pattern> {
             )
         );
 
-        // [4] quantifier ::= [?*+] | ( '{' quantity '}' )
-        quantifier.assign(
-            new TransformParser<>(
-                new AlternativeParser<>(
-                    new TransformParser<>(
-                        new CharacterParser(c -> c == '?' || c == '*' || c == '+'),
-                        match -> switch (match) {
-                            case '?' -> Quantifier.optional();
-                            case '*' -> Quantifier.kleeneStar();
-                            case '+' -> Quantifier.kleenePlus();
-                            default -> throw new PatternSyntaxException("Invalid quantifier character");
-                        }
+        quantifier.is(
+            oneOf(
+                transform(literal('?'), Quantifier::optional),
+                transform(literal('*'), Quantifier::zeroOrMore),
+                transform(literal('+'), Quantifier::oneOrMore),
+                transform(
+                    sequence(
+                        literal('{'), quantity, literal('}')
                     ),
-                    new TransformParser<>(
-                        new SequenceParser<>(
-                            new CharacterParser('{'),
-                            new TransformParser<>(
-                                new SequenceParser<>(
-                                    quantity, 
-                                    new CharacterParser('}')
-                                ),
-                                Pair::first
-                            )
-                        ),
-                        Pair::second
-                    )
+                    match -> Quantifier.range(match.second())
+                )
+            )
+        );
+
+        quantity.is(
+            oneOf(quantityRange, quantityMinRange, quantityExact)
+        );
+
+        quantityRange.is(
+            transform(
+                sequence(
+                    unsignedInteger(), literal(','), unsignedInteger()
                 ),
-                Either::getLeftOrRight
+                match -> Range.between(match.first(), match.third())
             )
         );
 
-        // [5] quantity ::= quantRange | quantMin | quantExact
-        quantity.assign(
-            new TransformParser<>(
-                new AlternativeParser<>(
-                    quantRange,
-                    new TransformParser<>(
-                        new AlternativeParser<>(
-                            quantMin, quantExact
-                        ),
-                        Either::getLeftOrRight
-                    )
+        quantityMinRange.is(
+            transform(
+                sequence(
+                    unsignedInteger(), literal(',')
                 ),
-                Either::getLeftOrRight
+                match -> Range.atLeast(match.first())
             )
         );
 
-        // [6] quantRange ::= [0-9]+ ',' [0-9]+
-        quantRange.assign(
-            new TransformParser<>(
-                new SequenceParser<>(
-                    IntegerParser.unsigned(),
-                    new TransformParser<>(
-                        new SequenceParser<>(
-                            new CharacterParser(','),
-                            IntegerParser.unsigned()
-                        ),
-                        Pair::second
-                    )
-                ),
-                Quantifier::range
+        quantityExact.is(
+            transform(
+                unsignedInteger(), Range::exact
             )
         );
 
-        // [7] quantMin ::= [0-9]+ ','
-        quantMin.assign(
-            new TransformParser<>(
-                new TransformParser<>(
-                    new SequenceParser<>(
-                        IntegerParser.unsigned(),
-                        new CharacterParser(',')
-                    ),
-                    Pair::first
-                ),
-                Quantifier::min
-            )
+        atom.is(
+            oneOf(normalCharacter, escapedCharacter, characterType, characterClass)
         );
 
-        // [8] quantExact ::= [0-9]+
-        quantExact.assign(
-            new TransformParser<>(
-                IntegerParser.unsigned(),
-                Quantifier::exact
-            )
+        normalCharacter.is(
+            transform(character, Patterns::character)
         );
 
-        // [9] atom ::= Char | charClass | ( '(' regExp ')' )
-        atom.assign(
-            new TransformParser<>(
-                new AlternativeParser<>(
-                    normalChar, 
-                    new TransformParser<>(
-                        new AlternativeParser<>(
-                            charClass,
-                            new TransformParser<>(
-                                new SequenceParser<>(
-                                    new CharacterParser('('),
-                                    new TransformParser<>(
-                                        new SequenceParser<>(
-                                            regex,
-                                            new CharacterParser(')')
-                                        ),
-                                        Pair::first
-                                    )
-                                ),
-                                Pair::second
-                            )
-                        ),
-                        Either::getLeftOrRight
-                    )
-                ),
-                Either::getLeftOrRight
-            )
-        );
-
-        // [10] char ::= [^.\?*+()|#x5B#x5D]
-        normalChar.assign(
-            new TransformParser<>(
-                new CharacterParser(c ->
-                    c != '.' &&
-                    c != '\\' &&
-                    c != '?'  &&
-                    c != '*' &&
-                    c != '+' &&
-                    c != '(' &&
-                    c != ')' &&
-                    c != '|' &&
-                    c != '[' &&
-                    c != ']'
-                ),
-                match -> new CharacterPattern(c -> c == match)
-            )
-        );
-
-        // [11] charClass ::= charClassEsc | charClassExpr | WildcardEsc
-        charClass.assign(
-            new TransformParser<>(
-                new AlternativeParser<>(
-                    charClassEsc,
-                    new TransformParser<>(
-                        new AlternativeParser<>(
-                            charClassExpr, wildcardEsc
-                        ),
-                        Either::getLeftOrRight
-                    )
-                ),
-                Either::getLeftOrRight
-            )
-        );
-
-        // [12] charClassExpr ::= '[' charGroup ']'
-        charClassExpr.assign(
-            new TransformParser<>(
-                new SequenceParser<>(
-                    new CharacterParser('['),
-                    new TransformParser<>(
-                        new SequenceParser<>(
-                            charGroup, new CharacterParser(']')
-                        ),
-                        Pair::first
+        escapedCharacter.is(
+            transform(
+                sequence(
+                    literal('\\'),
+                    oneOf(
+                        transform(literal('a'), _ -> Patterns.character('\u0007')),
+                        transform(literal('e'), _ -> Patterns.character('\u001B')),
+                        transform(literal('f'), _ -> Patterns.character('\f')),
+                        transform(literal('n'), _ -> Patterns.character('\n')),
+                        transform(literal('r'), _ -> Patterns.character('\r')),
+                        transform(literal('t'), _ -> Patterns.character('\t'))
                     )
                 ),
                 Pair::second
             )
         );
 
-        // [13] charGroup ::= posCharGroup | negCharGroup | charClassSub
-        charGroup.assign(
-            new TransformParser<>(
-                new AlternativeParser<>(
-                    posCharGroup,
-                    new TransformParser<>(
-                        new AlternativeParser<>(
-                            negCharGroup, charClassSub
-                        ),
-                        Either::getLeftOrRight
-                    )
-                ),
-                Either::getLeftOrRight
+        characterType.is(
+            oneOf(
+                transform(literal('.'), _ -> Patterns.any()),
+                transform(
+                    sequence(
+                        literal('\\'),
+                        oneOf(
+                            transform(literal('d'), _ -> Patterns.digit()),
+                            transform(literal('D'), _ -> Patterns.digit().negate())
+                        )
+                    ),
+                    Pair::second
+                )
             )
         );
 
-        // [14] posCharGroup ::= ( charRange | charClassEsc )+
-        posCharGroup.assign(
-            new TransformParser<>(
-                new KleenePlusParser<>(
-                    new TransformParser<>(
-                        new AlternativeParser<>(
-                            charRange, charClassEsc
-                        ),
-                        Either::getLeftOrRight
-                    )
+        characterClass.is(
+            transform(
+                sequence(
+                    literal('['), characterGroup, literal(']')
+                ),
+                Triple::second
+            )
+        );
+
+        characterGroup.is(
+            transform(
+                sequence(
+                    optional(literal('^')), characterRange
                 ),
                 match -> {
-                    if (match.size() == 1) {
-                        return match.get(0);
-                    } else {
-                        return new SequencePattern(match);
+                    var pattern = match.second();
+                    var negated = match.first();
+                    if (negated.isPresent()) {
+                        return pattern.negate();
                     }
+                    return pattern;
                 }
             )
         );
 
-        // [15] negCharGroup ::= '^' posCharGroup
-        negCharGroup.assign(
-            new TransformParser<>(
-                new SequenceParser<>(
-                    new CharacterParser('^'), posCharGroup
+        characterRange.is(
+            transform(
+                sequence(
+                    character, literal('-'), character
                 ),
-                Pair::second
+                match -> Patterns.range(match.first(), match.third())
             )
         );
 
+        character.is(
+            negate(
+                oneOf('\\', '^', '$', '.', '[', ']', '|', '(', ')', '?', '*', '+', '{', '}')
+            )
+        );
 
     }
 
@@ -389,112 +267,5 @@ public final class PatternParser implements Parser<Pattern> {
             return parseResult;
         }
         return ParseResult.failure();
-    }
-}
-
-final class Range {
-    private final int minimum;
-
-    private final int maximum;
-
-    public Range(int count) {
-        this(count, count);
-    }
-
-    public Range(int minimum, int maximum) {
-        if (minimum < 0) {
-            throw new IllegalArgumentException("Minimum must be greater than or equal to zero");
-        }
-
-        if (maximum < minimum) {
-            throw new IllegalArgumentException("Maximum must be greater than or equal to minimum.");
-        }
-
-        this.minimum = minimum;
-        this.maximum = maximum;
-    }
-
-    public int getMinimum() {
-        return minimum;
-    }
-
-    public int getMaximum() {
-        return maximum;
-    }
-}
-
-enum QuantifierType {
-    OPTIONAL,
-    KLEENE_STAR,
-    KLEENE_PLUS,
-    RANGE
-}
-
-final class Quantifier {
-    private QuantifierType type;
-
-    @Nullable
-    private final Range range;
-
-    private Quantifier(QuantifierType type) {
-        this(type, null);
-    }
-
-    private Quantifier(Range range) {
-        this(QuantifierType.RANGE, range);
-    }
-
-    private Quantifier(QuantifierType type, @Nullable Range range) {
-        if (type == QuantifierType.RANGE && range == null) {
-            throw new IllegalArgumentException("Range is missing");
-        }
-        this.type = type;
-        this.range = range;
-    }
-    
-    public QuantifierType getType() {
-        return type;
-    }
-
-    @SuppressWarnings("null")
-    public Range getRange() {
-        if (range == null) {
-            throw new IllegalStateException("Quantifier is not a range");
-        }
-        return range;
-    }
-
-    public static Quantifier optional() {
-        return new Quantifier(QuantifierType.OPTIONAL);
-    }
-
-    public static Quantifier kleeneStar() {
-        return new Quantifier(QuantifierType.KLEENE_STAR);
-    }
-
-    public static Quantifier kleenePlus() {
-        return new Quantifier(QuantifierType.KLEENE_PLUS);
-    }
-
-    public static Quantifier range(int minimum, int maximum) {
-        return new Quantifier(QuantifierType.RANGE,
-            new Range(minimum, maximum)
-        );
-    }
-
-    public static Quantifier range(Pair<Integer, Integer> range) {
-        return new Quantifier(QuantifierType.RANGE,
-            new Range(range.first(), range.second())
-        );
-    }
-
-    public static Quantifier exact(int count) {
-        return new Quantifier(QuantifierType.RANGE, new Range(count));
-    }
-
-    public static Quantifier min(int minimum) {
-        return new Quantifier(QuantifierType.RANGE,
-            new Range(minimum, Integer.MAX_VALUE)
-        );
     }
 }

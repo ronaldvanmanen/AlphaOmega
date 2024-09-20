@@ -22,7 +22,7 @@ package com.ragnvaldr.alphaomega.regex;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-public final class StringPattern extends Pattern {
+final class StringPattern extends Pattern {
     
     private String string;
 
@@ -41,9 +41,5 @@ public final class StringPattern extends Pattern {
             }
         }
         return true;
-    }
-
-    public static StringPattern emptyString() {
-        return new StringPattern("");
     }
 }

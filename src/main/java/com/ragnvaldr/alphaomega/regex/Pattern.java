@@ -40,4 +40,5 @@ public abstract class Pattern {
     }
 
     public abstract boolean matches(Scanner scanner);
+
 }

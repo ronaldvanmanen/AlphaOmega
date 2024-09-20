@@ -31,30 +31,125 @@ public class PatternTests {
     @Test
     void parseAnyCharacter() {
         var pattern = Pattern.parse(".");
-        assertFalse(pattern.matches("\n"));
-        chars().filter(s -> s == "\n").forEach(c -> {
-            assertTrue(pattern.matches(c));
+        chars().forEach(c -> {
+            assertEquals(
+                c != '\n', pattern.matches(String.valueOf(c))
+            );
         });
     }
 
     @Test
-    void parseLiteralCharacter() {
+    void parseNormalCharacter() {
         var pattern = Pattern.parse("a");
-        assertTrue(pattern.matches("a"));
-    }
-
-    @Test
-    void parseNewlineCharacter() {
-        var pattern = Pattern.parse("\\n");
-        assertTrue(pattern.matches("\n"));
-        chars().filter(s -> s == "\n").forEach(c -> {
-            assertFalse(pattern.matches(c));
+        chars().forEach(c -> {
+            assertEquals(
+                c == 'a', pattern.matches(String.valueOf(c))
+            );
         });
     }
 
-    Stream<String> chars() {
+    @Test
+    void parseBell() {
+        var pattern = Pattern.parse("\\a");
+        chars().forEach(c -> {
+            assertEquals(
+                c == '\u0007', pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
+    void parseEscape() {
+        var pattern = Pattern.parse("\\e");
+        chars().forEach(c -> {
+            assertEquals(
+                c == '\u001B', pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
+    void parseNewline() {
+        var pattern = Pattern.parse("\\n");
+        chars().forEach(c -> {
+            assertEquals(
+                c == '\n', pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
+    void parseCarriageReturn() {
+        var pattern = Pattern.parse("\\r");
+        chars().forEach(c -> {
+            assertEquals(
+                c == '\r', pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
+    void parseHorizontalTabulation() {
+        var pattern = Pattern.parse("\\t");
+        chars().forEach(c -> {
+            assertEquals(
+                c == '\t', pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
+    void parseDigit() {
+        var pattern = Pattern.parse("\\d");
+        chars().forEach(c -> {
+            assertEquals(
+                Character.isDigit(c), pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
+    void parseNonDigit() {
+        var pattern = Pattern.parse("\\D");
+        chars().forEach(c -> {
+            assertEquals(
+                !Character.isDigit(c), pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
+    void parsePositiveCharacterRange() {
+        var pattern = Pattern.parse("[0-9]");
+        chars().forEach(c -> {
+            assertEquals(
+                c >= '0' && c <= '9', pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
+    void parseNegativeCharacterRange() {
+        var pattern = Pattern.parse("[^0-9]");
+        chars().forEach(c -> {
+            assertEquals(
+                c < '0' || c > '9', pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
+    void parseAlternative() {
+        var pattern = Pattern.parse("cat|cataract|caterpillar");
+        assertTrue(pattern.matches("cat"));
+        assertTrue(pattern.matches("cataract"));
+        assertTrue(pattern.matches("caterpillar"));
+    }
+
+    @Test
+    Stream<Character> chars() {
         return IntStream
             .range(Character.MIN_VALUE, Character.MAX_VALUE)
-            .mapToObj(value -> String.valueOf((char) value));
+            .mapToObj(value -> Character.valueOf((char)value));
     }
 }

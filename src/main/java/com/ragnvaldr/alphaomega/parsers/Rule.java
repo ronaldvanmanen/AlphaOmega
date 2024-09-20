@@ -30,7 +30,7 @@ public final class Rule<T> implements Parser<T> {
         return _parser.parse(scanner);
     }
 
-    public void assign(Parser<T> parser) {
+    public void is(Parser<T> parser) {
         _parser = parser;
     }
 }

@@ -37,6 +37,17 @@ dependencyManagement {
 	}
 }
 
+test {
+	testLogging {
+		events "passed", "skipped", "failed"
+		exceptionFormat "full"
+		showCauses true
+		showExceptions true
+		showStackTraces true
+		showStandardStreams false
+    }
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }

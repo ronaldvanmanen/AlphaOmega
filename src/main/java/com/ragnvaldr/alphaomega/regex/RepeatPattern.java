@@ -22,7 +22,7 @@ package com.ragnvaldr.alphaomega.regex;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-public final class RepeatPattern extends Pattern {
+final class RepeatPattern extends Pattern {
 
     private Pattern pattern;
     private int lowerBound;

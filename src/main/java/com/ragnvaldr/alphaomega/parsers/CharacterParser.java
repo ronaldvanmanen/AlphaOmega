@@ -24,13 +24,9 @@ import java.util.function.Predicate;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-public final class CharacterParser implements Parser<Character> {
+final class CharacterParser implements NegatableParser<Character> {
     
     private Predicate<Character> predicate;
-
-    public CharacterParser(char character) {
-        this(c -> c == character);
-    }
 
     public CharacterParser(Predicate<Character> predicate) {
         this.predicate = predicate;
@@ -52,4 +48,7 @@ public final class CharacterParser implements Parser<Character> {
         return ParseResult.failure();
     }
 
+    public NegatableParser<Character> negate() {
+        return new CharacterParser(predicate.negate());
+    }
 }

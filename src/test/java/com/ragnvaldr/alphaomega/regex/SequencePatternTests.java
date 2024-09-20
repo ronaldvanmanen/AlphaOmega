@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.ragnvaldr.alphaomega.Scanner;
 
-import static com.ragnvaldr.alphaomega.regex.PatternFactory.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -35,11 +34,11 @@ public class SequencePatternTests {
         Scanner scanner = new Scanner("Hello, World!");
         Integer initialPosition = scanner.getPosition();
         SequencePattern pattern = new SequencePattern(
-            literal("Hello"),
-            literal(','),
-            whitespace(),
-            literal("World"),
-            literal('!')
+            new StringPattern("Hello"),
+            new StringPattern(","),
+            new StringPattern(" "),
+            new StringPattern("World"),
+            new StringPattern("!")
         );
         assertTrue(pattern.matches(scanner));
         Integer consumedCharacters = scanner.getPosition() - initialPosition;

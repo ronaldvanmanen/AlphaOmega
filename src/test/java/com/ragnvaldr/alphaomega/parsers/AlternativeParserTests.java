@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.ragnvaldr.alphaomega.Scanner;
 
-import static com.ragnvaldr.alphaomega.parsers.ParserFactory.*;
+import static com.ragnvaldr.alphaomega.parsers.Parsers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest

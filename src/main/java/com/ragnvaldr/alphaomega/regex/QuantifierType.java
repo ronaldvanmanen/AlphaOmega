@@ -18,12 +18,11 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-package com.ragnvaldr.alphaomega.parsers;
+package com.ragnvaldr.alphaomega.regex;
 
-public final class KleeneStarParser<T> extends RepeatParser<T> {
-
-    public KleeneStarParser(Parser<T> parser) {
-        super(parser, 0, Integer.MAX_VALUE);
-    }
-    
+enum QuantifierType {
+    OPTIONAL,
+    ZERO_OR_MORE,
+    ONE_OR_MORE,
+    RANGE
 }

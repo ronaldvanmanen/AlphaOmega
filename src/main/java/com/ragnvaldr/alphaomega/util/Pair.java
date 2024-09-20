@@ -20,10 +20,9 @@
 
 package com.ragnvaldr.alphaomega.util;
 
-public final record Pair<T, S>(T first, S second) {
+public final record Pair<T1, T2>(T1 first, T2 second) {
 
-    public static <T, S> Pair<T, S> of(T first, S second) {
+    public static <T1, T2> Pair<T1, T2> of(T1 first, T2 second) {
         return new Pair<>(first, second);
     }
 }
-

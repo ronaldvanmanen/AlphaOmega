@@ -20,32 +20,41 @@
 
 package com.ragnvaldr.alphaomega.regex;
 
-import java.util.List;
+final class Range {
+    private final int minimum;
 
-import com.ragnvaldr.alphaomega.Scanner;
+    private final int maximum;
 
-final class SequencePattern extends Pattern {
-
-    private List<Pattern> patterns;
-
-    public SequencePattern(Pattern... patterns) {
-        this(List.of(patterns));
-    }
-
-    public SequencePattern(List<Pattern> patterns) {
-        this.patterns = patterns;
-    }
-
-    public boolean matches(Scanner scanner) {
-        var position = scanner.getPosition();
-
-        for (var pattern : patterns) {
-            if (!pattern.matches(scanner)) {
-                scanner.setPosition(position);
-                return false;
-            }
+    public Range(int minimum, int maximum) {
+        if (minimum < 0) {
+            throw new IllegalArgumentException("Minimum must be greater than or equal to zero");
         }
 
-        return true;
+        if (maximum < minimum) {
+            throw new IllegalArgumentException("Maximum must be greater than or equal to minimum.");
+        }
+
+        this.minimum = minimum;
+        this.maximum = maximum;
+    }
+
+    public int getMinimum() {
+        return minimum;
+    }
+
+    public int getMaximum() {
+        return maximum;
+    }
+
+    public static Range between(int lowerBound, int upperBound) {
+        return new Range(lowerBound, upperBound);
+    }
+
+    public static Range exact(int bound) {
+        return new Range(bound, bound);
+    }
+
+    public static Range atLeast(int minimum) {
+        return new Range(minimum, Integer.MAX_VALUE);
     }
 }

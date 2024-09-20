@@ -2,19 +2,20 @@ package com.ragnvaldr.alphaomega.parsers;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
+
 import com.ragnvaldr.alphaomega.Scanner;
 
-public final class TransformParser<TTarget, TSource> implements Parser<TTarget> {
+final class TransformParser<TTarget, TSource> implements Parser<TTarget> {
  
     private Parser<TSource> parser;
 
-    private Function<TSource, TTarget> transform;
+    private Function<? super TSource, ? extends TTarget> transform;
 
-    public TransformParser(Parser<TSource> parser, Supplier<TTarget> transform)  {
+    public TransformParser(Parser<TSource> parser, Supplier<? extends TTarget> transform) {
         this(parser, _ -> transform.get());
     }
 
-    public TransformParser(Parser<TSource> parser, Function<TSource, TTarget> transform) {
+    public TransformParser(Parser<TSource> parser, Function<? super TSource, ? extends TTarget> transform) {
         this.parser = parser;
         this.transform = transform;
     }
@@ -28,5 +29,4 @@ public final class TransformParser<TTarget, TSource> implements Parser<TTarget> 
         }
         return ParseResult.failure();
     }
-    
 }

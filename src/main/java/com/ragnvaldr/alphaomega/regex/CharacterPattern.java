@@ -21,9 +21,10 @@
 package com.ragnvaldr.alphaomega.regex;
 
 import java.util.function.Predicate;
+
 import com.ragnvaldr.alphaomega.Scanner;
 
-public final class CharacterPattern extends Pattern {
+final class CharacterPattern extends Pattern {
 
     private Predicate<Character> predicate;
 
@@ -39,5 +40,9 @@ public final class CharacterPattern extends Pattern {
         }
         scanner.setPosition(position);
         return false;
+    }
+
+    public CharacterPattern negate() {
+        return new CharacterPattern(predicate.negate());
     }
 }

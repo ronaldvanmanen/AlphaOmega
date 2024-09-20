@@ -20,19 +20,19 @@
 
 package com.ragnvaldr.alphaomega.regex;
 
-import java.util.Collection;
+import java.util.List;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-public final class AlternativePattern extends Pattern {
+final class AlternativePattern extends Pattern {
 
     private Pattern[] patterns = null;
 
     public AlternativePattern(Pattern... patterns) {
-        this.patterns = patterns;
+        this(List.of(patterns));
     }
 
-    public AlternativePattern(Collection<Pattern> patterns) {
+    public AlternativePattern(List<Pattern> patterns) {
         this.patterns = patterns.toArray(new Pattern[0]);
     }
 

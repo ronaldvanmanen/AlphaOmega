@@ -23,7 +23,7 @@ package com.ragnvaldr.alphaomega.parsers;
 import com.ragnvaldr.alphaomega.Scanner;
 import com.ragnvaldr.alphaomega.util.Either;
 
-public final class AlternativeParser<T, S> implements Parser<Either<T, S>> {
+final class AlternativeParser<T, S> implements Parser<Either<T, S>> {
 
     private Parser<T> left;
 
@@ -57,4 +57,5 @@ public final class AlternativeParser<T, S> implements Parser<Either<T, S>> {
 
         return ParseResult.failure();
     }
+
 }

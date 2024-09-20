@@ -23,17 +23,14 @@ package com.ragnvaldr.alphaomega.parsers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import com.ragnvaldr.alphaomega.Scanner;
 
-public class RepeatParser<T> implements Parser<List<T>> {
+final class RepeatParser<T> implements Parser<List<T>> {
 
     private Parser<T> parser;
     private int lowerBound;
     private int upperBound;
-
-    public RepeatParser(Parser<T> parser, int count) {
-        this(parser, count, count);
-    }
 
     public RepeatParser(Parser<T> parser, int lowerBound, int upperBound) {
         if (lowerBound < 0 || upperBound < lowerBound) {
@@ -70,4 +67,5 @@ public class RepeatParser<T> implements Parser<List<T>> {
 
         return ParseResult.failure();
     }
+
 }

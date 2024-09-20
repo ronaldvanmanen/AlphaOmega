@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.ragnvaldr.alphaomega.Scanner;
 
-import static com.ragnvaldr.alphaomega.regex.PatternFactory.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -35,8 +34,8 @@ public class AlternativePatternTests {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
         var pattern = new AlternativePattern(
-            literal("World"),
-            literal("Hello")
+            new StringPattern("World"),
+            new StringPattern("Hello")
         );
         
         assertTrue(pattern.matches(scanner));

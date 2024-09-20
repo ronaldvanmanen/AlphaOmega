@@ -22,7 +22,7 @@ package com.ragnvaldr.alphaomega.parsers;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-public final class StringParser implements Parser<String> {
+final class StringParser implements Parser<String> {
     
     private String string;
 

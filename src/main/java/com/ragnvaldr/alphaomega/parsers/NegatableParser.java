@@ -20,10 +20,8 @@
 
 package com.ragnvaldr.alphaomega.parsers;
 
-public final class KleenePlusParser<T> extends RepeatParser<T> {
+public interface NegatableParser<T> extends Parser<T> {
 
-    public KleenePlusParser(Parser<T> parser) {
-        super(parser, 1, Integer.MAX_VALUE);
-    }
-    
+    public NegatableParser<T> negate();
+
 }

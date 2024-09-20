@@ -20,45 +20,61 @@
 
 package com.ragnvaldr.alphaomega.regex;
 
-public final class PatternFactory {
-    
-    public static Pattern literal(String literal) {
-        return new StringPattern(literal);
-    }
+import java.util.List;
 
-    public static Pattern literal(Character literal) {
+final class Patterns {
+
+    private Patterns() {}
+
+    public static CharacterPattern character(Character literal) {
         return new CharacterPattern((character) -> character == literal);
     }
 
-    public static Pattern digit() {
+    public static CharacterPattern digit() {
         return new CharacterPattern(Character::isDigit);
     }
 
-    public static Pattern letter() {
+    public static CharacterPattern letter() {
         return new CharacterPattern(Character::isLetter);
     }
 
-    public static Pattern letterOrDigit() {
+    public static CharacterPattern letterOrDigit() {
         return new CharacterPattern(Character::isLetterOrDigit);
     }
 
-    public static Pattern lowerCaseLetter() {
+    public static CharacterPattern lowerCaseLetter() {
         return new CharacterPattern(Character::isLowerCase);
     }
 
-    public static Pattern upperCaseLetter() {
+    public static CharacterPattern upperCaseLetter() {
         return new CharacterPattern(Character::isUpperCase);
     }
 
-    public static Pattern whitespace() {
+    public static CharacterPattern whitespace() {
         return new CharacterPattern(Character::isWhitespace);
     }
 
-    public static Pattern range(char firstCharacter, char lastCharacter) {
+    public static CharacterPattern range(char firstCharacter, char lastCharacter) {
         return new CharacterPattern((character) -> character >= firstCharacter && character <= lastCharacter);
     }
 
-    public static Pattern alternative(Pattern... patterns) {
+    public static CharacterPattern any() {
+        return new CharacterPattern((character) -> character != '\n');
+    }
+
+    public static Pattern string(String literal) {
+        return new StringPattern(literal);
+    }
+
+    public static Pattern emptyString() {
+        return new StringPattern("");
+    }
+
+    public static Pattern oneOf(Pattern... patterns) {
+        return new AlternativePattern(patterns);
+    }
+
+    public static Pattern oneOf(List<Pattern> patterns) {
         return new AlternativePattern(patterns);
     }
 
@@ -66,16 +82,20 @@ public final class PatternFactory {
         return new SequencePattern(patterns);
     }
 
-    public static Pattern optional(Pattern pattern) {
+    public static Pattern sequence(List<Pattern> patterns) {
+        return new SequencePattern(patterns);
+    }
+
+    public static Pattern zeroOrOne(Pattern pattern) {
         return new RepeatPattern(pattern, 0, 1);
     }
     
-    public static Pattern kleenePlus(Pattern pattern) {
-        return new RepeatPattern(pattern, 1, Integer.MAX_VALUE);
+    public static Pattern zeroOrMore(Pattern pattern) {
+        return new RepeatPattern(pattern, 0, Integer.MAX_VALUE);
     }
 
-    public static Pattern kleeneStar(Pattern pattern) {
-        return new RepeatPattern(pattern, 0, Integer.MAX_VALUE);
+    public static Pattern oneOrMore(Pattern pattern) {
+        return new RepeatPattern(pattern, 1, Integer.MAX_VALUE);
     }
 
     public static Pattern repeat(Pattern pattern, int count) {
@@ -85,4 +105,5 @@ public final class PatternFactory {
     public static Pattern repeat(Pattern pattern, int lowerBound, int upperBound) {
         return new RepeatPattern(pattern, lowerBound, upperBound);
     }
+
 }

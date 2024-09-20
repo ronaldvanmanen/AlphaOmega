@@ -23,7 +23,7 @@ package com.ragnvaldr.alphaomega.parsers;
 import com.ragnvaldr.alphaomega.Scanner;
 import com.ragnvaldr.alphaomega.util.Pair;
 
-public final class SequenceParser<T, S> implements Parser<Pair<T, S>> {
+final class SequenceParser<T, S> implements Parser<Pair<T, S>> {
 
     private Parser<T> left;
 
