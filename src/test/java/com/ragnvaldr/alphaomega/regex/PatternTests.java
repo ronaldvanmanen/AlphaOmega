@@ -147,6 +147,13 @@ public class PatternTests {
     }
 
     @Test
+    void parseGroup() {
+        var pattern = Pattern.parse("cat(aract|erpillar|)");
+        assertTrue(pattern.matches("cat"));
+        assertTrue(pattern.matches("cataract"));
+        assertTrue(pattern.matches("caterpillar"));
+    }
+
     Stream<Character> chars() {
         return IntStream
             .range(Character.MIN_VALUE, Character.MAX_VALUE)

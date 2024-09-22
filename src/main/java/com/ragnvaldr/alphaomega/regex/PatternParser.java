@@ -178,7 +178,18 @@ final class PatternParser implements Parser<Pattern> {
         );
 
         atom.is(
-            oneOf(normalCharacter, escapedCharacter, characterType, characterClass)
+            oneOf(
+                normalCharacter,
+                escapedCharacter,
+                characterType,
+                characterClass,
+                transform(
+                    sequence(
+                        literal('('), regex, literal(')')
+                    ),
+                    Triple::second
+                )
+            )
         );
 
         normalCharacter.is(
