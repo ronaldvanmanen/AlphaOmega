@@ -221,7 +221,9 @@ final class PatternParser implements Parser<Pattern> {
                         literal('\\'),
                         oneOf(
                             transform(literal('d'), _ -> Patterns.digit()),
-                            transform(literal('D'), _ -> Patterns.digit().negate())
+                            transform(literal('D'), _ -> Patterns.digit().negate()),
+                            transform(literal('s'), _ -> Patterns.whitespace()),
+                            transform(literal('S'), _ -> Patterns.whitespace().negate())
                         )
                     ),
                     Pair::second

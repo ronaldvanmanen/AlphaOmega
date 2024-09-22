@@ -119,6 +119,26 @@ public class PatternTests {
     }
 
     @Test
+    void parseWhitespace() {
+        var pattern = Pattern.parse("\\s");
+        chars().forEach(c -> {
+            assertEquals(
+                Character.isWhitespace(c), pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
+    void parseNonWhitespace() {
+        var pattern = Pattern.parse("\\S");
+        chars().forEach(c -> {
+            assertEquals(
+                !Character.isWhitespace(c), pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
     void parsePositiveCharacterRange() {
         var pattern = Pattern.parse("[0-9]");
         chars().forEach(c -> {
