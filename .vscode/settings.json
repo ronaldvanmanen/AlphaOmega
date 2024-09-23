@@ -1,5 +1,19 @@
 {
+    "editor.renderWhitespace": "all",
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.inlayHints.parameterNames.enabled": "none",
+    "java.format.enabled": false,
+    "files.trimTrailingWhitespace": false,
+    "spotlessGradle.diagnostics.enable": true,
+    "spotlessGradle.format.enable": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.spotlessGradle": "always"
+    },
+    "[java]": {
+        "editor.defaultFormatter": "richardwillis.vscode-spotless-gradle"
+    },
+    "[gradle]": {
+        "editor.defaultFormatter": "richardwillis.vscode-spotless-gradle"
+    }
 }

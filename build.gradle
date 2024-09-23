@@ -1,53 +1,76 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.3.4'
-	id 'io.spring.dependency-management' version '1.1.6'
-	id 'org.graalvm.buildtools.native' version '0.10.3'
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'org.graalvm.buildtools.native' version '0.10.3'
+    id "com.diffplug.spotless" version "6.25.0"
 }
 
 group = 'com.ragnvaldr'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(22)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(22)
+    }
 }
 
 repositories {
-	mavenCentral()
-	gradlePluginPortal()
+    mavenCentral()
+    gradlePluginPortal()
 }
 
 ext {
-	set('springShellVersion', "3.3.2")
+    set('springShellVersion', "3.3.2")
 }
 
 dependencies {
-	implementation 'org.springframework.shell:spring-shell-starter:3.3.2'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.4'
-	testImplementation 'org.springframework.shell:spring-shell-starter-test:3.3.2'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.0'
-	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'org.springframework.shell:spring-shell-starter:3.3.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.4'
+    testImplementation 'org.springframework.shell:spring-shell-starter-test:3.3.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.0'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
 dependencyManagement {
-	imports {
-		mavenBom "org.springframework.shell:spring-shell-dependencies:${springShellVersion}"
-	}
+    imports {
+        mavenBom "org.springframework.shell:spring-shell-dependencies:${springShellVersion}"
+    }
 }
 
 test {
-	testLogging {
-		events "passed", "skipped", "failed"
-		exceptionFormat "full"
-		showCauses true
-		showExceptions true
-		showStackTraces true
-		showStandardStreams false
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+        showCauses true
+        showExceptions true
+        showStackTraces true
+        showStandardStreams false
     }
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
+}
+
+spotless {
+    format 'misc', {
+        target '*.gradle', '.gitattributes', '.gitignore'
+
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
+    }
+
+    java {
+        target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
+
+        licenseHeaderFile rootProject.file('gradle/spotless/license.java')
+        importOrder('java', 'javax', 'com', 'org', '', '\\#')
+        removeUnusedImports()
+
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
+    }
 }
