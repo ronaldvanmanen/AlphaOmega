@@ -46,6 +46,7 @@ final class AlternativeParser<T, S> implements Parser<Either<T, S>> {
         }
 
         scanner.setPosition(position);
+
         var rightParseResult = right.parse(scanner);
         if (rightParseResult.isSuccess()) {
             return ParseResult.success(
