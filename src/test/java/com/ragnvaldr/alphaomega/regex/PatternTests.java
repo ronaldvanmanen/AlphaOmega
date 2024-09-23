@@ -20,10 +20,13 @@
 
 package com.ragnvaldr.alphaomega.regex;
 
-import java.util.stream.*;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.junit.jupiter.api.Assertions.*;
+
+import static com.ragnvaldr.alphaomega.util.Streams.*;
 
 @SpringBootTest
 final class PatternTests {
@@ -172,11 +175,5 @@ final class PatternTests {
         assertTrue(pattern.matches("cat"));
         assertTrue(pattern.matches("cataract"));
         assertTrue(pattern.matches("caterpillar"));
-    }
-
-    Stream<Character> chars() {
-        return IntStream
-            .range(Character.MIN_VALUE, Character.MAX_VALUE)
-            .mapToObj(value -> Character.valueOf((char)value));
     }
 }
