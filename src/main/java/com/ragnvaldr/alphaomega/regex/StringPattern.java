@@ -35,7 +35,7 @@ final class StringPattern extends Pattern {
         var position = scanner.getPosition();
         for (var index = 0; index < string.length(); ++index) {
             var character = scanner.read();
-            if (character == -1 || character != string.charAt(index)) {
+            if (character != string.charAt(index)) {
                 scanner.setPosition(position);
                 return false;
             }

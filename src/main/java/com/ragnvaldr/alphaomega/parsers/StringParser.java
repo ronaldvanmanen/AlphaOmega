@@ -38,8 +38,8 @@ final class StringParser implements Parser<String> {
 
         for (var index = 0; index < string.length(); ++index) {
             var character = scanner.read();
-            if (character != -1 || character == string.charAt(index)) {
-                builder.append(character);
+            if (character == string.charAt(index)) {
+                builder.append((char)character);
             } else {
                 scanner.setPosition(position);
                 return ParseResult.failure();

@@ -22,6 +22,7 @@ package com.ragnvaldr.alphaomega.regex;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import com.ragnvaldr.alphaomega.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
