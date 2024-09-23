@@ -20,6 +20,8 @@
 
 package com.ragnvaldr.alphaomega.parsers;
 
+import java.util.NoSuchElementException;
+
 public abstract class ParseResult<T> {
     
     ParseResult() { }
@@ -73,6 +75,6 @@ class Failure<T> extends ParseResult<T> {
 
     @Override
     public T getValue() {
-        throw new IllegalStateException("Cannot get value from failure");
+        throw new NoSuchElementException("No value present");
     }
 }
