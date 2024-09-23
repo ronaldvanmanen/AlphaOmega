@@ -27,7 +27,7 @@ import com.ragnvaldr.alphaomega.Scanner;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class CharacterPatternTests {
+final class CharacterPatternTests {
         
     @Test
     void matchesSucceeds() {

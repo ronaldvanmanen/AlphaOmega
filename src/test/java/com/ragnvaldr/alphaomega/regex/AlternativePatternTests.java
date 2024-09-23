@@ -27,7 +27,7 @@ import com.ragnvaldr.alphaomega.Scanner;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class AlternativePatternTests {
+final class AlternativePatternTests {
         
     @Test
     void matchesSucceeds() {

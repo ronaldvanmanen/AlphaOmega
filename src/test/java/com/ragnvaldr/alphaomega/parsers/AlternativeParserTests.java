@@ -28,7 +28,7 @@ import static com.ragnvaldr.alphaomega.parsers.Parsers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class AlternativeParserTests {
+final class AlternativeParserTests {
         
     @Test
     void matchesSucceeds() {
