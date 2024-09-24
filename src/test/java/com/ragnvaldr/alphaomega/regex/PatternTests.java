@@ -139,6 +139,26 @@ final class PatternTests {
     }
 
     @Test
+    void parseWord() {
+        var pattern = Pattern.parse("\\w");
+        chars().forEach(c -> {
+            assertEquals(
+                Character.isLetterOrDigit(c), pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
+    void parseNonWord() {
+        var pattern = Pattern.parse("\\W");
+        chars().forEach(c -> {
+            assertEquals(
+                !Character.isLetterOrDigit(c), pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
     void parsePositiveCharacterRange() {
         var pattern = Pattern.parse("[0-9]");
         chars().forEach(c -> {
