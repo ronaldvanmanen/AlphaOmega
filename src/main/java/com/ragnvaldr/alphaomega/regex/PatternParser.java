@@ -265,11 +265,8 @@ final class PatternParser implements Parser<Pattern> {
         );
 
         character.is(
-            negate(
-                oneOf('\\', '^', '$', '.', '[', ']', '|', '(', ')', '?', '*', '+', '{', '}')
-            )
+            notOneOf('\\', '^', '$', '.', '[', ']', '|', '(', ')', '?', '*', '+', '{', '}')
         );
-
     }
 
     @Override

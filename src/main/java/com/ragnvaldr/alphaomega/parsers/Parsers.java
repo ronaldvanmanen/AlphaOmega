@@ -49,6 +49,16 @@ public final class Parsers {
         return new CharacterParser((c) -> characters.contains(c));
     }
 
+    public static NegatableParser<Character> notOneOf(Character... characters) {
+        return notOneOf(Set.of(characters));
+    }
+
+    private static NegatableParser<Character> notOneOf(Set<Character> characters) {
+        return negate(
+            oneOf('\\', '^', '$', '.', '[', ']', '|', '(', ')', '?', '*', '+', '{', '}')
+        );
+    }
+
     public static NegatableParser<Character> digit() {
         return new CharacterParser(Character::isDigit);
     }
