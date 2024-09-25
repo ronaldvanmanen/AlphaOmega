@@ -54,7 +54,7 @@ final class Patterns {
     }
 
     public static CharacterPattern range(char firstCharacter, char lastCharacter) {
-        return new CharacterPattern((character) -> character >= firstCharacter && character <= lastCharacter);
+        return new CharacterPattern(Predicates.isInRange(firstCharacter, lastCharacter));
     }
 
     public static CharacterPattern any() {

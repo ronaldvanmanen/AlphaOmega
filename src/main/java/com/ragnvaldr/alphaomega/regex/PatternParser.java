@@ -19,6 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 package com.ragnvaldr.alphaomega.regex;
 
+import java.util.function.Predicate;
 import java.util.stream.*;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,7 @@ final class PatternParser implements Parser<Pattern> {
 
     private final Rule<Pattern> characterGroup = new Rule<>();
 
-    private final Rule<CharacterPattern> characterRange = new Rule<>();
+    private final Rule<Predicate<Character>> characterRange = new Rule<>();
 
     private final Rule<Character> character = new Rule<>();
 
@@ -244,15 +245,16 @@ final class PatternParser implements Parser<Pattern> {
         characterGroup.is(
             transform(
                 sequence(
-                    optional(literal('^')), characterRange
+                    optional(literal('^')), oneOrMore(characterRange)
                 ),
                 match -> {
-                    var pattern = match.second();
-                    var negated = match.first();
-                    if (negated.isPresent()) {
-                        return pattern.negate();
+                    var circumflex = match.first();
+                    var characterRanges = match.second();
+                    var predicate = characterRanges.stream().reduce((a, b) -> a.or(b)).get();
+                    if (circumflex.isPresent()) {
+                        return new CharacterPattern(predicate.negate());
                     }
-                    return pattern;
+                    return new CharacterPattern(predicate);
                 }
             )
         );
@@ -262,7 +264,7 @@ final class PatternParser implements Parser<Pattern> {
                 sequence(
                     character, literal('-'), character
                 ),
-                match -> Patterns.range(match.first(), match.third())
+                match -> Predicates.isInRange(match.first(), match.third())
             )
         );
 

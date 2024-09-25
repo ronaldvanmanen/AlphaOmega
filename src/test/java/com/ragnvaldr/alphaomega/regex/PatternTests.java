@@ -159,11 +159,23 @@ final class PatternTests {
     }
 
     @Test
-    void parsePositiveCharacterRange() {
+    void parseSinglePositiveCharacterRange() {
         var pattern = Pattern.parse("[0-9]");
         chars().forEach(c -> {
             assertEquals(
                 c >= '0' && c <= '9', pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
+    void parseMultiplePositiveCharacterRange() {
+        var pattern = Pattern.parse("[0-9a-zA-Z]");
+        chars().forEach(c -> {
+            assertEquals(
+                (c >= '0' && c <= '9') ||
+                (c >= 'a' && c <= 'z') ||
+                (c >= 'A' && c <= 'Z'), pattern.matches(String.valueOf(c))
             );
         });
     }
@@ -174,6 +186,18 @@ final class PatternTests {
         chars().forEach(c -> {
             assertEquals(
                 c < '0' || c > '9', pattern.matches(String.valueOf(c))
+            );
+        });
+    }
+
+    @Test
+    void parseMultipleNegativeCharacterRange() {
+        var pattern = Pattern.parse("[^0-9a-zA-Z]");
+        chars().forEach(c -> {
+            assertEquals(
+                (c < '0' || c > '9') &&
+                (c < 'a' || c > 'z') &&
+                (c < 'A' || c > 'Z'), pattern.matches(String.valueOf(c))
             );
         });
     }
