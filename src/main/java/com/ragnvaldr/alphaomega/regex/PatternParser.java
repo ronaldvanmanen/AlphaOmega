@@ -20,8 +20,6 @@
 package com.ragnvaldr.alphaomega.regex;
 
 import java.util.function.Predicate;
-import java.util.stream.*;
-import java.util.stream.Collectors;
 
 import com.ragnvaldr.alphaomega.*;
 import com.ragnvaldr.alphaomega.parsers.*;
@@ -83,18 +81,13 @@ final class PatternParser implements Parser<Pattern> {
                     )
                 ),
                 match -> {
-                    var head = match.first();
-                    var tail = match.second();
-                    if (tail.size() == 0) {
-                        return head;
-                    }
+                    var firstBranch = match.first();
+                    var optionalBranches = match.second();
+                    var pattern = optionalBranches.stream()
+                        .map(p -> p.orElseGet(Patterns::emptyString))
+                        .reduce(firstBranch, (a, b) -> Patterns.oneOf(a, b));
 
-                    var patterns = Stream.concat(
-                        Stream.of(head), tail.stream().map(p -> p.orElseGet(Patterns::emptyString))
-                    )
-                    .collect(Collectors.toList());
-
-                    return Patterns.oneOf(patterns);
+                    return pattern;
                 }
             )
         );
