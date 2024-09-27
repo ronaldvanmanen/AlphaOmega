@@ -23,6 +23,54 @@ import java.util.NoSuchElementException;
 
 public abstract class Either<T, S> {
 
+    static final class Left<T, S> extends Either<T, S> {
+
+        private final T value;
+
+        Left(T value) {
+            this.value = value;
+        }
+
+        @Override
+        public boolean isLeft() {
+            return true;
+        }
+
+        @Override
+        public T getLeft() {
+            return value;
+        }
+
+        @Override
+        public S getRight() {
+            throw new NoSuchElementException("No value present");
+        }
+    }
+
+    static final class Right<T, S> extends Either<T, S> {
+
+        private final S value;
+
+        Right(S value) {
+            this.value = value;
+        }
+
+        @Override
+        public boolean isLeft() {
+            return false;
+        }
+
+        @Override
+        public T getLeft() {
+            throw new NoSuchElementException("No value present");
+        }
+
+        @Override
+        public S getRight() {
+            return value;
+        }
+    }
+
     public static <T, S> Either<T, S> left(T value) {
         return new Left<T, S>(value);
     }
@@ -47,53 +95,5 @@ public abstract class Either<T, S> {
         } else {
             return value.getRight();
         }
-    }
-}
-
-final class Left<T, S> extends Either<T, S> {
-
-    private final T value;
-
-    Left(T value) {
-        this.value = value;
-    }
-
-    @Override
-    public boolean isLeft() {
-        return true;
-    }
-
-    @Override
-    public T getLeft() {
-        return value;
-    }
-
-    @Override
-    public S getRight() {
-        throw new NoSuchElementException("No value present");
-    }
-}
-
-final class Right<T, S> extends Either<T, S> {
-
-    private final S value;
-
-    Right(S value) {
-        this.value = value;
-    }
-
-    @Override
-    public boolean isLeft() {
-        return false;
-    }
-
-    @Override
-    public T getLeft() {
-        throw new NoSuchElementException("No value present");
-    }
-
-    @Override
-    public S getRight() {
-        return value;
     }
 }
