@@ -129,7 +129,7 @@ final class PatternParser implements Parser<Pattern> {
         );
 
         quantifier.is(
-            oneOf(
+            anyOf(
                 transform(literal('?'), Quantifier::optional),
                 transform(literal('*'), Quantifier::zeroOrMore),
                 transform(literal('+'), Quantifier::oneOrMore),
@@ -143,7 +143,7 @@ final class PatternParser implements Parser<Pattern> {
         );
 
         quantity.is(
-            oneOf(quantityRange, quantityMinRange, quantityExact)
+            anyOf(quantityRange, quantityMinRange, quantityExact)
         );
 
         quantityRange.is(
@@ -171,7 +171,7 @@ final class PatternParser implements Parser<Pattern> {
         );
 
         atom.is(
-            oneOf(
+            anyOf(
                 normalCharacter,
                 escapedCharacter,
                 characterType,
@@ -189,7 +189,7 @@ final class PatternParser implements Parser<Pattern> {
         escapedCharacter.is(
             sequence(
                 omit(literal('\\')),
-                oneOf(
+                anyOf(
                     transform(literal('a'), () -> Patterns.character('\u0007')),
                     transform(literal('e'), () -> Patterns.character('\u001B')),
                     transform(literal('f'), () -> Patterns.character('\f')),
@@ -201,11 +201,11 @@ final class PatternParser implements Parser<Pattern> {
         );
 
         characterType.is(
-            oneOf(
+            anyOf(
                 transform(literal('.'), () -> Patterns.any()),
                 sequence(
                     omit(literal('\\')),
-                    oneOf(
+                    anyOf(
                         transform(literal('d'), () -> Patterns.digit()),
                         transform(literal('D'), () -> Patterns.digit().negate()),
                         transform(literal('s'), () -> Patterns.whitespace()),
@@ -250,7 +250,7 @@ final class PatternParser implements Parser<Pattern> {
         );
 
         character.is(
-            notOneOf('\\', '^', '$', '.', '[', ']', '|', '(', ')', '?', '*', '+', '{', '}')
+            noneOf('\\', '^', '$', '.', '[', ']', '|', '(', ')', '?', '*', '+', '{', '}')
         );
     }
 

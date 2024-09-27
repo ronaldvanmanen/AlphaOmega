@@ -41,22 +41,20 @@ public final class Parsers {
         return new CharacterParser((character) -> character >= firstCharacter && character <= lastCharacter);
     }
 
-    public static CharacterParser oneOf(Character... characters) {
-        return oneOf(Set.of(characters));
+    public static CharacterParser anyOf(Character... characters) {
+        return anyOf(Set.of(characters));
     }
 
-    private static CharacterParser oneOf(Set<Character> characters) {
+    private static CharacterParser anyOf(Set<Character> characters) {
         return new CharacterParser((c) -> characters.contains(c));
     }
 
-    public static CharacterParser notOneOf(Character... characters) {
-        return notOneOf(Set.of(characters));
+    public static CharacterParser noneOf(Character... characters) {
+        return noneOf(Set.of(characters));
     }
 
-    private static CharacterParser notOneOf(Set<Character> characters) {
-        return negate(
-            oneOf('\\', '^', '$', '.', '[', ']', '|', '(', ')', '?', '*', '+', '{', '}')
-        );
+    private static CharacterParser noneOf(Set<Character> characters) {
+        return new CharacterParser((c) -> !characters.contains(c));
     }
 
     public static CharacterParser digit() {
@@ -83,7 +81,7 @@ public final class Parsers {
         return new CharacterParser(Character::isWhitespace);
     }
 
-    public static CharacterParser negate(CharacterParser parser) {
+    public static CharacterParser not(CharacterParser parser) {
         return parser.negate();
     }
 
@@ -104,11 +102,11 @@ public final class Parsers {
     }
 
     @SafeVarargs
-    public static <T> Parser<T> oneOf(Parser<T> head, Parser<T>... tail) {
-        return oneOf(head, List.of(tail));
+    public static <T> Parser<T> anyOf(Parser<T> head, Parser<T>... tail) {
+        return anyOf(head, List.of(tail));
     }
 
-    private static <T> Parser<T> oneOf(Parser<T> head, List<Parser<T>> tail) {
+    private static <T> Parser<T> anyOf(Parser<T> head, List<Parser<T>> tail) {
         int tailSize = tail.size();
         if (tailSize == 0) {
             return head;
@@ -125,7 +123,7 @@ public final class Parsers {
 
         return new TransformParser<>(
             new AlternativeParser<>(
-                head, oneOf(tail.get(0), tail.subList(1, tailSize))
+                head, anyOf(tail.get(0), tail.subList(1, tailSize))
             ),
             Either::getLeftOrRight
         );
