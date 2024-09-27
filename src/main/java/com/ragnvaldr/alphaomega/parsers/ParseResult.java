@@ -23,6 +23,40 @@ import java.util.NoSuchElementException;
 
 public abstract class ParseResult<T> {
 
+    static final class Success<T> extends ParseResult<T> {
+
+        private T value;
+
+        public Success(T value) {
+            this.value = value;
+        }
+
+        @Override
+        public boolean isSuccess() {
+            return true;
+        }
+
+        @Override
+        public T getValue() {
+            return value;
+        }
+    }
+
+    static final class Failure<T> extends ParseResult<T> {
+
+        public Failure() { }
+
+        @Override
+        public boolean isSuccess() {
+            return false;
+        }
+
+        @Override
+        public T getValue() {
+            throw new NoSuchElementException("No value present");
+        }
+    }
+
     ParseResult() { }
 
     public static <T> ParseResult<T> success(T value) {
@@ -41,39 +75,4 @@ public abstract class ParseResult<T> {
 
     public abstract T getValue();
 
-}
-
-class Success<T> extends ParseResult<T> {
-
-    private T value;
-
-    public Success(T value) {
-        this.value = value;
-    }
-
-    @Override
-    public boolean isSuccess() {
-        return true;
-    }
-
-    @Override
-    public T getValue() {
-        return value;
-    }
-}
-
-
-class Failure<T> extends ParseResult<T> {
-
-    public Failure() { }
-
-    @Override
-    public boolean isSuccess() {
-        return false;
-    }
-
-    @Override
-    public T getValue() {
-        throw new NoSuchElementException("No value present");
-    }
 }
