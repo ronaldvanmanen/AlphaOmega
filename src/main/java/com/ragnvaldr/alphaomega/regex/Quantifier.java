@@ -19,6 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.
 package com.ragnvaldr.alphaomega.regex;
 
+import com.ragnvaldr.alphaomega.util.Range;
+
 import org.springframework.lang.Nullable;
 
 final class Quantifier {

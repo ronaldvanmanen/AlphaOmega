@@ -17,14 +17,14 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
-package com.ragnvaldr.alphaomega.regex;
+package com.ragnvaldr.alphaomega.util;
 
-final class Range {
+public final class Range {
     private final int minimum;
 
     private final int maximum;
 
-    public Range(int minimum, int maximum) {
+    private Range(int minimum, int maximum) {
         if (minimum < 0) {
             throw new IllegalArgumentException("Minimum must be greater than or equal to zero");
         }
