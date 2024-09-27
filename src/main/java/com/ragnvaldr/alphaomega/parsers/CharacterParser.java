@@ -23,11 +23,11 @@ import java.util.function.Predicate;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-final class CharacterParser implements NegatableParser<Character> {
+public final class CharacterParser implements Parser<Character> {
 
     private Predicate<Character> predicate;
 
-    public CharacterParser(Predicate<Character> predicate) {
+    CharacterParser(Predicate<Character> predicate) {
         this.predicate = predicate;
     }
 
@@ -47,7 +47,7 @@ final class CharacterParser implements NegatableParser<Character> {
         return ParseResult.failure();
     }
 
-    public NegatableParser<Character> negate() {
+    CharacterParser negate() {
         return new CharacterParser(predicate.negate());
     }
 }

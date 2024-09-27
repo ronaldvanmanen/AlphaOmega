@@ -20,7 +20,6 @@
 package com.ragnvaldr.alphaomega.parsers;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -33,70 +32,74 @@ public final class Parsers {
 
     private Parsers() {}
 
-    public static NegatableParser<Character> literal(char character) {
+    public static CharacterParser literal(char character) {
         return new CharacterParser((c) -> c == character);
     }
 
-    public static NegatableParser<Character> range(char firstCharacter, char lastCharacter) {
+    public static CharacterParser range(char firstCharacter, char lastCharacter) {
         return new CharacterParser((character) -> character >= firstCharacter && character <= lastCharacter);
     }
 
-    public static NegatableParser<Character> oneOf(Character... characters) {
+    public static CharacterParser oneOf(Character... characters) {
         return oneOf(Set.of(characters));
     }
 
-    private static NegatableParser<Character> oneOf(Set<Character> characters) {
+    private static CharacterParser oneOf(Set<Character> characters) {
         return new CharacterParser((c) -> characters.contains(c));
     }
 
-    public static NegatableParser<Character> notOneOf(Character... characters) {
+    public static CharacterParser notOneOf(Character... characters) {
         return notOneOf(Set.of(characters));
     }
 
-    private static NegatableParser<Character> notOneOf(Set<Character> characters) {
+    private static CharacterParser notOneOf(Set<Character> characters) {
         return negate(
             oneOf('\\', '^', '$', '.', '[', ']', '|', '(', ')', '?', '*', '+', '{', '}')
         );
     }
 
-    public static NegatableParser<Character> digit() {
+    public static CharacterParser digit() {
         return new CharacterParser(Character::isDigit);
     }
 
-    public static NegatableParser<Character> letter() {
+    public static CharacterParser letter() {
         return new CharacterParser(Character::isLetter);
     }
 
-    public static NegatableParser<Character> letterOrDigit() {
+    public static CharacterParser letterOrDigit() {
         return new CharacterParser(Character::isLetterOrDigit);
     }
 
-    public static NegatableParser<Character> lowerCaseLetter() {
+    public static CharacterParser lowerCaseLetter() {
         return new CharacterParser(Character::isLowerCase);
     }
 
-    public static NegatableParser<Character> upperCaseLetter() {
+    public static CharacterParser upperCaseLetter() {
         return new CharacterParser(Character::isUpperCase);
     }
 
-    public static NegatableParser<Character> whitespace() {
+    public static CharacterParser whitespace() {
         return new CharacterParser(Character::isWhitespace);
     }
 
-    public static NegatableParser<Character> negate(NegatableParser<Character> parser) {
+    public static CharacterParser negate(CharacterParser parser) {
         return parser.negate();
     }
 
-    public static Parser<String> literal(String literal) {
+    public static StringParser literal(String literal) {
         return new StringParser(literal);
     }
 
-    public static IntegerParser unsignedInteger() {
-        return new IntegerParser(false);
+    public static IntegerParser signedInteger() {
+        return new IntegerParser(true, 10, 1, Integer.MAX_VALUE);
     }
 
-    public static <T, S> Parser<Either<T, S>> either(Parser<T> left, Parser<S> right) {
-        return new AlternativeParser<T, S>(left, right);
+    public static IntegerParser unsignedInteger() {
+        return new IntegerParser(false, 10, 1, Integer.MAX_VALUE);
+    }
+
+    public static <T, S> AlternativeParser<T, S> either(Parser<T> left, Parser<S> right) {
+        return new AlternativeParser<>(left, right);
     }
 
     @SafeVarargs
@@ -111,53 +114,56 @@ public final class Parsers {
         }
 
         if (tailSize == 1) {
-            return transform(
-                either(
+            return new TransformParser<>(
+                new AlternativeParser<>(
                     head, tail.get(0)
                 ),
                 Either::getLeftOrRight
             );
         }
 
-        return transform(
-            either(
+        return new TransformParser<>(
+            new AlternativeParser<>(
                 head, oneOf(tail.get(0), tail.subList(1, tailSize))
             ),
             Either::getLeftOrRight
         );
     }
 
-    public static <T, S> Parser<Pair<T, S>> sequence(Parser<T> left, Parser<S> right) {
-        return new SequenceParser<T, S>(left, right);
+    public static <T, S> SequenceParser<T, S> sequence(Parser<T> left, Parser<S> right) {
+        return new SequenceParser<>(left, right);
     }
 
     public static <T, S, R> Parser<Triple<T, S, R>> sequence(Parser<T> left, Parser<S> middle, Parser<R> right) {
-        return transform(
-            sequence(left, sequence(middle, right)), match -> Triple.of(match.first(), match.second())
+        return new TransformParser<>(
+            new SequenceParser<>(left,
+                new SequenceParser<>(middle, right)
+            ),
+            match -> Triple.of(match.first(), match.second())
         );
     }
 
-    public static <T> Parser<Optional<T>> optional(Parser<T> parser) {
-        return new OptionalParser<T>(parser);
+    public static <T> OptionalParser<T> optional(Parser<T> parser) {
+        return new OptionalParser<>(parser);
     }
 
-    public static <T> Parser<List<T>> zeroOrMore(Parser<T> parser) {
-        return new RepeatParser<T>(parser, 0, Integer.MAX_VALUE);
+    public static <T> RepeatParser<T> zeroOrMore(Parser<T> parser) {
+        return new RepeatParser<>(parser, 0, Integer.MAX_VALUE);
     }
 
-    public static <T> Parser<List<T>> oneOrMore(Parser<T> parser) {
-        return new RepeatParser<T>(parser, 1, Integer.MAX_VALUE);
+    public static <T> RepeatParser<T> oneOrMore(Parser<T> parser) {
+        return new RepeatParser<>(parser, 1, Integer.MAX_VALUE);
     }
 
-    public static <T> Parser<List<T>> repeat(Parser<T> parser, int lowerBound, int upperBound) {
-        return new RepeatParser<T>(parser, lowerBound, upperBound);
+    public static <T> RepeatParser<T> repeat(Parser<T> parser, int lowerBound, int upperBound) {
+        return new RepeatParser<>(parser, lowerBound, upperBound);
     }
 
-    public static <T, S> Parser<S> transform(Parser<T> parser, Supplier<? extends S> transform) {
+    public static <T, S> TransformParser<S, T> transform(Parser<T> parser, Supplier<? extends S> transform) {
         return new TransformParser<>(parser, transform);
     }
 
-    public static <T, S> Parser<S> transform(Parser<T> parser, Function<? super T, ? extends S> transform) {
+    public static <T, S> TransformParser<S, T> transform(Parser<T> parser, Function<? super T, ? extends S> transform) {
         return new TransformParser<>(parser, transform);
     }
 

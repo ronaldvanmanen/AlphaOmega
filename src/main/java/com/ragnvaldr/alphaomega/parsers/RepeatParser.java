@@ -25,16 +25,17 @@ import java.util.List;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-final class RepeatParser<T> implements Parser<List<T>> {
+public final class RepeatParser<T> implements Parser<List<T>> {
 
     private Parser<T> parser;
     private int lowerBound;
     private int upperBound;
 
-    public RepeatParser(Parser<T> parser, int lowerBound, int upperBound) {
+    RepeatParser(Parser<T> parser, int lowerBound, int upperBound) {
         if (lowerBound < 0 || upperBound < lowerBound) {
             throw new IllegalArgumentException("Invalid bounds");
         }
+
         this.parser = parser;
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;

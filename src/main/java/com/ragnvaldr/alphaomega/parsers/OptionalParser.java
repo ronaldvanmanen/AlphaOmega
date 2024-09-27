@@ -23,11 +23,11 @@ import java.util.Optional;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-final class OptionalParser<T> implements Parser<Optional<T>> {
+public final class OptionalParser<T> implements Parser<Optional<T>> {
 
     private Parser<T> parser;
 
-    public OptionalParser(Parser<T> parser) {
+    OptionalParser(Parser<T> parser) {
         this.parser = parser;
     }
 

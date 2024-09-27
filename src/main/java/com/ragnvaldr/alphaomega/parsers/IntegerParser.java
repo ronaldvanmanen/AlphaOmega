@@ -21,7 +21,7 @@ package com.ragnvaldr.alphaomega.parsers;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-final class IntegerParser implements Parser<Integer> {
+public final class IntegerParser implements Parser<Integer> {
 
     private boolean signed;
 
@@ -31,23 +31,7 @@ final class IntegerParser implements Parser<Integer> {
 
     private int maxDigits;
 
-    public IntegerParser() {
-        this(true, 10, 1, Integer.MAX_VALUE);
-    }
-
-    public IntegerParser(boolean signed) {
-        this(signed, 10, 1, Integer.MAX_VALUE);
-    }
-
-    public IntegerParser(int radix) {
-        this(true, radix, 1, Integer.MAX_VALUE);
-    }
-
-    public IntegerParser(boolean signed, int radix) {
-        this(signed, radix, 1, Integer.MAX_VALUE);
-    }
-
-    public IntegerParser(boolean signed, int radix, int minDigits, int maxDigits) {
+    IntegerParser(boolean signed, int radix, int minDigits, int maxDigits) {
         if (radix < 2 || radix > 36)
             throw new IllegalArgumentException(
                 "The radix must lie between 2 and 36.");

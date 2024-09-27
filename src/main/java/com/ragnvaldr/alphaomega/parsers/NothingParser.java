@@ -23,6 +23,8 @@ import com.ragnvaldr.alphaomega.Scanner;
 
 final class NothingParser<T> implements Parser<T> {
 
+    NothingParser() {}
+
     public ParseResult<T> parse(Scanner scanner) {
         return ParseResult.failure();
     }

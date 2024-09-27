@@ -22,13 +22,13 @@ package com.ragnvaldr.alphaomega.parsers;
 import com.ragnvaldr.alphaomega.Scanner;
 import com.ragnvaldr.alphaomega.util.Either;
 
-final class AlternativeParser<T, S> implements Parser<Either<T, S>> {
+public final class AlternativeParser<T, S> implements Parser<Either<T, S>> {
 
     private Parser<T> left;
 
     private Parser<S> right;
 
-    public AlternativeParser(Parser<T> left, Parser<S> right) {
+    AlternativeParser(Parser<T> left, Parser<S> right) {
         this.left = left;
         this.right = right;
     }

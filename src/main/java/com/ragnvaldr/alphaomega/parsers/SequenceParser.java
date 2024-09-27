@@ -22,13 +22,13 @@ package com.ragnvaldr.alphaomega.parsers;
 import com.ragnvaldr.alphaomega.Scanner;
 import com.ragnvaldr.alphaomega.util.Pair;
 
-final class SequenceParser<T, S> implements Parser<Pair<T, S>> {
+public final class SequenceParser<T, S> implements Parser<Pair<T, S>> {
 
     private Parser<T> left;
 
     private Parser<S> right;
 
-    public SequenceParser(Parser<T> left, Parser<S> right) {
+    SequenceParser(Parser<T> left, Parser<S> right) {
         this.left = left;
         this.right = right;
     }

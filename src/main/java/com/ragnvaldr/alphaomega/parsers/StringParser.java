@@ -21,11 +21,11 @@ package com.ragnvaldr.alphaomega.parsers;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-final class StringParser implements Parser<String> {
+public final class StringParser implements Parser<String> {
 
     private String string;
 
-    public StringParser(String string) {
+    StringParser(String string) {
         this.string = string;
     }
 
