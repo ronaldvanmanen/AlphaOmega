@@ -24,7 +24,7 @@ import com.ragnvaldr.alphaomega.util.Range;
 import org.springframework.lang.Nullable;
 
 final class Quantifier {
-    private QuantifierType type;
+    private final QuantifierType type;
 
     @Nullable
     private final Range range;
