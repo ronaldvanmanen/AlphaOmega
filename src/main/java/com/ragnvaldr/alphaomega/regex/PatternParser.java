@@ -75,8 +75,8 @@ final class PatternParser implements Parser<Pattern> {
             transform(
                 sequence(branch,
                     zeroOrMore(
-                        transform(
-                            sequence(literal('|'), optional(branch)), Pair::second
+                        sequence(
+                            omit(literal('|')), optional(branch)
                         )
                     )
                 ),
@@ -135,9 +135,9 @@ final class PatternParser implements Parser<Pattern> {
                 transform(literal('+'), Quantifier::oneOrMore),
                 transform(
                     sequence(
-                        literal('{'), quantity, literal('}')
+                        omit(literal('{')), quantity, omit(literal('}'))
                     ),
-                    match -> Quantifier.range(match.second())
+                    Quantifier::range
                 )
             )
         );
@@ -149,18 +149,18 @@ final class PatternParser implements Parser<Pattern> {
         quantityRange.is(
             transform(
                 sequence(
-                    unsignedInteger(), literal(','), unsignedInteger()
+                    unsignedInteger(), omit(literal(',')), unsignedInteger()
                 ),
-                match -> Range.between(match.first(), match.third())
+                match -> Range.between(match.first(), match.second())
             )
         );
 
         quantityMinRange.is(
             transform(
                 sequence(
-                    unsignedInteger(), literal(',')
+                    unsignedInteger(), omit(literal(','))
                 ),
-                match -> Range.atLeast(match.first())
+                Range::atLeast
             )
         );
 
@@ -176,11 +176,8 @@ final class PatternParser implements Parser<Pattern> {
                 escapedCharacter,
                 characterType,
                 characterClass,
-                transform(
-                    sequence(
-                        literal('('), regex, literal(')')
-                    ),
-                    Triple::second
+                sequence(
+                    omit(literal('(')), regex, omit(literal(')'))
                 )
             )
         );
@@ -190,48 +187,39 @@ final class PatternParser implements Parser<Pattern> {
         );
 
         escapedCharacter.is(
-            transform(
-                sequence(
-                    literal('\\'),
-                    oneOf(
-                        transform(literal('a'), _ -> Patterns.character('\u0007')),
-                        transform(literal('e'), _ -> Patterns.character('\u001B')),
-                        transform(literal('f'), _ -> Patterns.character('\f')),
-                        transform(literal('n'), _ -> Patterns.character('\n')),
-                        transform(literal('r'), _ -> Patterns.character('\r')),
-                        transform(literal('t'), _ -> Patterns.character('\t'))
-                    )
-                ),
-                Pair::second
+            sequence(
+                omit(literal('\\')),
+                oneOf(
+                    transform(literal('a'), () -> Patterns.character('\u0007')),
+                    transform(literal('e'), () -> Patterns.character('\u001B')),
+                    transform(literal('f'), () -> Patterns.character('\f')),
+                    transform(literal('n'), () -> Patterns.character('\n')),
+                    transform(literal('r'), () -> Patterns.character('\r')),
+                    transform(literal('t'), () -> Patterns.character('\t'))
+                )
             )
         );
 
         characterType.is(
             oneOf(
-                transform(literal('.'), _ -> Patterns.any()),
-                transform(
-                    sequence(
-                        literal('\\'),
-                        oneOf(
-                            transform(literal('d'), _ -> Patterns.digit()),
-                            transform(literal('D'), _ -> Patterns.digit().negate()),
-                            transform(literal('s'), _ -> Patterns.whitespace()),
-                            transform(literal('S'), _ -> Patterns.whitespace().negate()),
-                            transform(literal('w'), _ -> Patterns.letterOrDigit()),
-                            transform(literal('W'), _ -> Patterns.letterOrDigit().negate())
-                        )
-                    ),
-                    Pair::second
+                transform(literal('.'), () -> Patterns.any()),
+                sequence(
+                    omit(literal('\\')),
+                    oneOf(
+                        transform(literal('d'), () -> Patterns.digit()),
+                        transform(literal('D'), () -> Patterns.digit().negate()),
+                        transform(literal('s'), () -> Patterns.whitespace()),
+                        transform(literal('S'), () -> Patterns.whitespace().negate()),
+                        transform(literal('w'), () -> Patterns.letterOrDigit()),
+                        transform(literal('W'), () -> Patterns.letterOrDigit().negate())
+                    )
                 )
             )
         );
 
         characterClass.is(
-            transform(
-                sequence(
-                    literal('['), characterGroup, literal(']')
-                ),
-                Triple::second
+            sequence(
+                omit(literal('[')), characterGroup, omit(literal(']'))
             )
         );
 
@@ -255,9 +243,9 @@ final class PatternParser implements Parser<Pattern> {
         characterRange.is(
             transform(
                 sequence(
-                    character, literal('-'), character
+                    character, omit(literal('-')), character
                 ),
-                match -> Predicates.isInRange(match.first(), match.third())
+                match -> Predicates.isInRange(match.first(), match.second())
             )
         );
 

@@ -27,6 +27,7 @@ import java.util.function.Supplier;
 import com.ragnvaldr.alphaomega.util.Either;
 import com.ragnvaldr.alphaomega.util.Pair;
 import com.ragnvaldr.alphaomega.util.Triple;
+import com.ragnvaldr.alphaomega.util.Unused;
 
 public final class Parsers {
 
@@ -134,12 +135,38 @@ public final class Parsers {
         return new SequenceParser<>(left, right);
     }
 
+    public static <T, S> Parser<T> sequence(Parser<T> left, OmitParser<S> right) {
+        return new TransformParser<>(new SequenceParser<T, Unused>(left, right), Pair::first);
+    }
+
+    public static <T, S> Parser<S> sequence(OmitParser<T> left, Parser<S> right) {
+        return new TransformParser<>(new SequenceParser<Unused, S>(left, right), Pair::second);
+    }
+
     public static <T, S, R> Parser<Triple<T, S, R>> sequence(Parser<T> left, Parser<S> middle, Parser<R> right) {
         return new TransformParser<>(
             new SequenceParser<>(left,
                 new SequenceParser<>(middle, right)
             ),
             match -> Triple.of(match.first(), match.second())
+        );
+    }
+
+    public static <T, S, R> Parser<Pair<T, R>> sequence(Parser<T> left, OmitParser<S> middle, Parser<R> right) {
+        return new TransformParser<>(
+            new SequenceParser<>(left,
+                new SequenceParser<>(middle, right)
+            ),
+            match -> Pair.of(match.first(), match.second().second())
+        );
+    }
+
+    public static <T, S, R> Parser<S> sequence(OmitParser<T> left, Parser<S> middle, OmitParser<R> right) {
+        return new TransformParser<>(
+            new SequenceParser<>(left,
+                new SequenceParser<>(middle, right)
+            ),
+            match -> match.second().first()
         );
     }
 
@@ -167,4 +194,7 @@ public final class Parsers {
         return new TransformParser<>(parser, transform);
     }
 
+    public static <T> OmitParser<T> omit(Parser<T> parser) {
+        return new OmitParser<>(parser);
+    }
 }
