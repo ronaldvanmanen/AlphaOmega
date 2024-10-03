@@ -17,9 +17,37 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
+package com.ragnvaldr.alphaomega.parsing;
 
-@NonNullFields
-@NonNullApi
-package com.ragnvaldr.alphaomega.lexers;
+import java.util.function.Predicate;
 
-import org.springframework.lang.*;
+import com.ragnvaldr.alphaomega.Scanner;
+
+public final class CharacterParser implements Parser<Character> {
+
+    private Predicate<Character> predicate;
+
+    CharacterParser(Predicate<Character> predicate) {
+        this.predicate = predicate;
+    }
+
+    public ParseResult<Character> parse(Scanner scanner) {
+        var position = scanner.getPosition();
+
+        var value = scanner.read();
+        if (value != -1) {
+            var character = (char)value;
+            if (predicate.test(character)) {
+                return ParseResult.success(character);
+            }
+        }
+
+        scanner.setPosition(position);
+
+        return ParseResult.failure();
+    }
+
+    CharacterParser negate() {
+        return new CharacterParser(predicate.negate());
+    }
+}

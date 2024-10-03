@@ -17,35 +17,16 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
-package com.ragnvaldr.alphaomega.parsers;
+package com.ragnvaldr.alphaomega.lexing;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
+public final class Token {
+    private TokenType type;
 
-import com.ragnvaldr.alphaomega.Scanner;
-
-public final class TransformParser<TTarget, TSource> implements Parser<TTarget> {
-
-    private Parser<TSource> parser;
-
-    private Function<? super TSource, ? extends TTarget> transform;
-
-    TransformParser(Parser<TSource> parser, Supplier<? extends TTarget> transform) {
-        this(parser, _ -> transform.get());
+    public TokenType type() {
+        return type;
     }
 
-    TransformParser(Parser<TSource> parser, Function<? super TSource, ? extends TTarget> transform) {
-        this.parser = parser;
-        this.transform = transform;
-    }
-
-    public ParseResult<TTarget> parse(Scanner scanner) {
-        var parseResult = parser.parse(scanner);
-        if (parseResult.isSuccess()) {
-            return ParseResult.success(
-                transform.apply(parseResult.getValue())
-            );
-        }
-        return ParseResult.failure();
+    public Token(TokenType type) {
+        this.type = type;
     }
 }

@@ -17,26 +17,8 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
-package com.ragnvaldr.alphaomega.parsers;
+package com.ragnvaldr.alphaomega.lexing;
 
-import com.ragnvaldr.alphaomega.Scanner;
-import com.ragnvaldr.alphaomega.util.Unused;
-
-public final class OmitParser<T> implements Parser<Unused> {
-
-    private Parser<T> parser;
-
-    OmitParser(Parser<T> parser) {
-        this.parser = parser;
-    }
-
-    @Override
-    public ParseResult<Unused> parse(Scanner scanner) {
-        var parseResult = parser.parse(scanner);
-        if (parseResult.isFailure()) {
-            return ParseResult.failure();
-        } else {
-            return ParseResult.success(null);
-        }
-    }
+public enum TokenType {
+    EOF
 }

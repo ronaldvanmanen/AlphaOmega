@@ -17,49 +17,39 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
-package com.ragnvaldr.alphaomega.parsers;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+package com.ragnvaldr.alphaomega.parsing;
 
 import com.ragnvaldr.alphaomega.Scanner;
+import com.ragnvaldr.alphaomega.util.Either;
 
-public final class RepeatParser<T> implements Parser<List<T>> {
+public final class AlternativeParser<T, S> implements Parser<Either<T, S>> {
 
-    private Parser<T> parser;
-    private int lowerBound;
-    private int upperBound;
+    private Parser<T> left;
 
-    RepeatParser(Parser<T> parser, int lowerBound, int upperBound) {
-        if (lowerBound < 0 || upperBound < lowerBound) {
-            throw new IllegalArgumentException("Invalid bounds");
-        }
+    private Parser<S> right;
 
-        this.parser = parser;
-        this.lowerBound = lowerBound;
-        this.upperBound = upperBound;
+    AlternativeParser(Parser<T> left, Parser<S> right) {
+        this.left = left;
+        this.right = right;
     }
 
     @Override
-    public ParseResult<List<T>> parse(Scanner scanner) {
-
+    public ParseResult<Either<T, S>> parse(Scanner scanner) {
         var position = scanner.getPosition();
-        var items = new ArrayList<T>();
-        var count = 0;
 
-        while (count < upperBound) {
-            var parseResult = parser.parse(scanner);
-            if (parseResult.isFailure()) {
-                break;
-            }
-            items.add(parseResult.getValue());
-            ++count;
+        var leftParseResult = left.parse(scanner);
+        if (leftParseResult.isSuccess()) {
+            return ParseResult.success(
+                Either.left(leftParseResult.getValue())
+            );
         }
 
-        if (count >= lowerBound && count <= upperBound) {
+        scanner.setPosition(position);
+
+        var rightParseResult = right.parse(scanner);
+        if (rightParseResult.isSuccess()) {
             return ParseResult.success(
-                Collections.unmodifiableList(items)
+                Either.right(rightParseResult.getValue())
             );
         }
 
@@ -67,5 +57,4 @@ public final class RepeatParser<T> implements Parser<List<T>> {
 
         return ParseResult.failure();
     }
-
 }

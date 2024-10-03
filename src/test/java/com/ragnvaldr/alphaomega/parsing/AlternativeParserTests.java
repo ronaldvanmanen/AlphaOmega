@@ -17,7 +17,7 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
-package com.ragnvaldr.alphaomega.parsers;
+package com.ragnvaldr.alphaomega.parsing;
 
 import java.util.NoSuchElementException;
 
@@ -29,42 +29,58 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-final class StringParserTests {
+final class AlternativeParserTests {
 
     @Test
-    void parseSucceeds() {
+    void parseSucceedsWhenLeftParserMatches() {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
-        var parser = new StringParser("Hello");
+        var parser = new AlternativeParser<>(
+            new StringParser("Hello"),
+            new StringParser("Goodbye")
+        );
 
         var parseResult = parser.parse(scanner);
 
         assertTrue(parseResult.isSuccess());
-        assertEquals("Hello", parseResult.getValue());
+        assertTrue(parseResult.getValue().isLeft());
+        assertFalse(parseResult.getValue().isRight());
+        assertEquals("Hello", parseResult.getValue().getLeft());
+        assertThrows(NoSuchElementException.class, () -> parseResult.getValue().getRight());
         assertEquals(5, scanner.getPosition() - initialPosition);
     }
 
     @Test
-    void parseFails() {
+    void parseSucceedsWhenRightParserMatches() {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
-        var parser = new StringParser("World!");
+        var parser = new AlternativeParser<>(
+            new StringParser("Goodbye"),
+            new StringParser("Hello")
+        );
 
         var parseResult = parser.parse(scanner);
 
-        assertTrue(parseResult.isFailure());
-        assertThrows(NoSuchElementException.class, () -> parseResult.getValue());
-        assertEquals(0, scanner.getPosition() - initialPosition);
+        assertTrue(parseResult.isSuccess());
+        assertFalse(parseResult.getValue().isLeft());
+        assertTrue(parseResult.getValue().isRight());
+        assertThrows(NoSuchElementException.class, () -> parseResult.getValue().getLeft());
+        assertEquals("Hello", parseResult.getValue().getRight());
+        assertEquals(5, scanner.getPosition() - initialPosition);
     }
 
     @Test
-    void parseFailsWhenEOF() {
-        var scanner = new Scanner("");
+    void parseFailsWhenLeftParserAndRightParserDontMatch() {
+        var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
-        var parser = new StringParser("Hello, World!");
+        var parser = new AlternativeParser<>(
+            new StringParser("Goodbye"),
+            new StringParser("Ciao")
+        );
 
         var parseResult = parser.parse(scanner);
 
+        assertFalse(parseResult.isSuccess());
         assertTrue(parseResult.isFailure());
         assertThrows(NoSuchElementException.class, () -> parseResult.getValue());
         assertEquals(0, scanner.getPosition() - initialPosition);

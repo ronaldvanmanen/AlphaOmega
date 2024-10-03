@@ -17,24 +17,34 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
-package com.ragnvaldr.alphaomega.lexers;
+package com.ragnvaldr.alphaomega.parsing;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-public final class Lexer {
+public final class StringParser implements Parser<String> {
 
-    private Scanner scanner;
+    private String string;
 
-    public Lexer(Scanner scanner) {
-        this.scanner = scanner;
+    StringParser(String string) {
+        this.string = string;
     }
 
-    public Token read() {
-        while (true) {
+    @Override
+    public ParseResult<String> parse(Scanner scanner) {
+        var position = scanner.getPosition();
+
+        var builder = new StringBuilder();
+
+        for (var index = 0; index < string.length(); ++index) {
             var character = scanner.read();
-            if (character == -1) {
-                return new Token(TokenType.EOF);
+            if (character == string.charAt(index)) {
+                builder.append((char)character);
+            } else {
+                scanner.setPosition(position);
+                return ParseResult.failure();
             }
         }
+
+        return ParseResult.success(builder.toString());
     }
 }

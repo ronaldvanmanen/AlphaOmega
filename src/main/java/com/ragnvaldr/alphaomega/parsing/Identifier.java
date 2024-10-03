@@ -17,8 +17,23 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
-package com.ragnvaldr.alphaomega.lexers;
+package com.ragnvaldr.alphaomega.parsing;
 
-public enum TokenType {
-    EOF
+import com.ragnvaldr.alphaomega.Scanner;
+
+public final class Identifier<T> implements Parser<T> {
+
+    private Parser<? extends T> _parser = new NothingParser<>();
+
+    public ParseResult<T> parse(Scanner scanner) {
+        var parseResult = _parser.parse(scanner);
+        if (parseResult.isSuccess()) {
+            return ParseResult.success((T)parseResult.getValue());
+        }
+        return ParseResult.failure();
+    }
+
+    public void is(Parser<? extends T> parser) {
+        _parser = parser;
+    }
 }

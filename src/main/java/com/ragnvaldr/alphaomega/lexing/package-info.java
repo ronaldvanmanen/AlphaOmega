@@ -17,16 +17,9 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
-package com.ragnvaldr.alphaomega.parsers;
 
-import com.ragnvaldr.alphaomega.Scanner;
+@NonNullFields
+@NonNullApi
+package com.ragnvaldr.alphaomega.lexing;
 
-final class NothingParser<T> implements Parser<T> {
-
-    NothingParser() {}
-
-    public ParseResult<T> parse(Scanner scanner) {
-        return ParseResult.failure();
-    }
-
-}
+import org.springframework.lang.*;

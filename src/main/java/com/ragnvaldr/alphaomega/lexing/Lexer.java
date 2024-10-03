@@ -17,12 +17,24 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
-package com.ragnvaldr.alphaomega.parsers;
+package com.ragnvaldr.alphaomega.lexing;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-public interface Parser<T> {
+public final class Lexer {
 
-    public ParseResult<T> parse(Scanner scanner);
+    private Scanner scanner;
 
+    public Lexer(Scanner scanner) {
+        this.scanner = scanner;
+    }
+
+    public Token read() {
+        while (true) {
+            var character = scanner.read();
+            if (character == -1) {
+                return new Token(TokenType.EOF);
+            }
+        }
+    }
 }

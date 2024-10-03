@@ -17,35 +17,35 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
-package com.ragnvaldr.alphaomega.parsers;
+package com.ragnvaldr.alphaomega.parsing;
 
-import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-public final class OptionalParser<T> implements Parser<Optional<T>> {
+public final class TransformParser<TTarget, TSource> implements Parser<TTarget> {
 
-    private Parser<T> parser;
+    private Parser<TSource> parser;
 
-    OptionalParser(Parser<T> parser) {
-        this.parser = parser;
+    private Function<? super TSource, ? extends TTarget> transform;
+
+    TransformParser(Parser<TSource> parser, Supplier<? extends TTarget> transform) {
+        this(parser, _ -> transform.get());
     }
 
-    @Override
-    public ParseResult<Optional<T>> parse(Scanner scanner) {
-        var position = scanner.getPosition();
+    TransformParser(Parser<TSource> parser, Function<? super TSource, ? extends TTarget> transform) {
+        this.parser = parser;
+        this.transform = transform;
+    }
+
+    public ParseResult<TTarget> parse(Scanner scanner) {
         var parseResult = parser.parse(scanner);
         if (parseResult.isSuccess()) {
             return ParseResult.success(
-                Optional.of(
-                    parseResult.getValue()
-                )
+                transform.apply(parseResult.getValue())
             );
         }
-
-        scanner.setPosition(position);
-        return ParseResult.success(
-            Optional.empty()
-        );
+        return ParseResult.failure();
     }
 }

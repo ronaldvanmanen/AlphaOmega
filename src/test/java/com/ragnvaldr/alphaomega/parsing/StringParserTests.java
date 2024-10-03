@@ -17,7 +17,7 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
-package com.ragnvaldr.alphaomega.parsers;
+package com.ragnvaldr.alphaomega.parsing;
 
 import java.util.NoSuchElementException;
 
@@ -29,26 +29,26 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-final class CharacterParserTests {
+final class StringParserTests {
 
     @Test
     void parseSucceeds() {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
-        var parser = new CharacterParser(c -> c == 'H');
+        var parser = new StringParser("Hello");
 
         var parseResult = parser.parse(scanner);
 
         assertTrue(parseResult.isSuccess());
-        assertEquals('H', parseResult.getValue());
-        assertEquals(1, scanner.getPosition() - initialPosition);
+        assertEquals("Hello", parseResult.getValue());
+        assertEquals(5, scanner.getPosition() - initialPosition);
     }
 
     @Test
     void parseFails() {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
-        var parser = new CharacterParser(c -> c == 'h');
+        var parser = new StringParser("World!");
 
         var parseResult = parser.parse(scanner);
 
@@ -61,7 +61,7 @@ final class CharacterParserTests {
     void parseFailsWhenEOF() {
         var scanner = new Scanner("");
         var initialPosition = scanner.getPosition();
-        var parser = new CharacterParser(c -> c == 'A');
+        var parser = new StringParser("Hello, World!");
 
         var parseResult = parser.parse(scanner);
 

@@ -17,23 +17,40 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
-package com.ragnvaldr.alphaomega.parsers;
+package com.ragnvaldr.alphaomega.parsing;
 
 import com.ragnvaldr.alphaomega.Scanner;
+import com.ragnvaldr.alphaomega.util.Pair;
 
-public final class Identifier<T> implements Parser<T> {
+public final class SequenceParser<T, S> implements Parser<Pair<T, S>> {
 
-    private Parser<? extends T> _parser = new NothingParser<>();
+    private Parser<T> left;
 
-    public ParseResult<T> parse(Scanner scanner) {
-        var parseResult = _parser.parse(scanner);
-        if (parseResult.isSuccess()) {
-            return ParseResult.success((T)parseResult.getValue());
-        }
-        return ParseResult.failure();
+    private Parser<S> right;
+
+    SequenceParser(Parser<T> left, Parser<S> right) {
+        this.left = left;
+        this.right = right;
     }
 
-    public void is(Parser<? extends T> parser) {
-        _parser = parser;
+    @Override
+    public ParseResult<Pair<T, S>> parse(Scanner scanner) {
+        var position = scanner.getPosition();
+
+        var leftParseResult = left.parse(scanner);
+        if (leftParseResult.isSuccess()) {
+            var rightParseResult = right.parse(scanner);
+            if (rightParseResult.isSuccess()) {
+                return ParseResult.success(
+                    Pair.of(
+                        leftParseResult.getValue(),
+                        rightParseResult.getValue())
+                );
+            }
+        }
+
+        scanner.setPosition(position);
+
+        return ParseResult.failure();
     }
 }

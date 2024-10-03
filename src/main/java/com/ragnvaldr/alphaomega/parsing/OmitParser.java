@@ -17,16 +17,26 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
-package com.ragnvaldr.alphaomega.lexers;
+package com.ragnvaldr.alphaomega.parsing;
 
-public final class Token {
-    private TokenType type;
+import com.ragnvaldr.alphaomega.Scanner;
+import com.ragnvaldr.alphaomega.util.Unused;
 
-    public TokenType type() {
-        return type;
+public final class OmitParser<T> implements Parser<Unused> {
+
+    private Parser<T> parser;
+
+    OmitParser(Parser<T> parser) {
+        this.parser = parser;
     }
 
-    public Token(TokenType type) {
-        this.type = type;
+    @Override
+    public ParseResult<Unused> parse(Scanner scanner) {
+        var parseResult = parser.parse(scanner);
+        if (parseResult.isFailure()) {
+            return ParseResult.failure();
+        } else {
+            return ParseResult.success(null);
+        }
     }
 }
