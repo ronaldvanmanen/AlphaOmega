@@ -44,4 +44,8 @@ final class CharacterPattern extends Pattern {
     public CharacterPattern negate() {
         return new CharacterPattern(predicate.negate());
     }
+
+    public CharacterPattern or(CharacterPattern other) {
+        return new CharacterPattern(predicate.or(other.predicate));
+    }
 }

@@ -184,11 +184,11 @@ public final class Parsers {
         return new RepeatParser<>(parser, lowerBound, upperBound);
     }
 
-    public static <T, S> TransformParser<S, T> transform(Parser<T> parser, Supplier<? extends S> transform) {
+    public static <T, S> TransformParser<T, S> transform(Parser<S> parser, Supplier<? extends T> transform) {
         return new TransformParser<>(parser, transform);
     }
 
-    public static <T, S> TransformParser<S, T> transform(Parser<T> parser, Function<? super T, ? extends S> transform) {
+    public static <T, S> TransformParser<T, S> transform(Parser<S> parser, Function<? super S, ? extends T> transform) {
         return new TransformParser<>(parser, transform);
     }
 

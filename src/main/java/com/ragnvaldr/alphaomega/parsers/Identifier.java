@@ -21,15 +21,19 @@ package com.ragnvaldr.alphaomega.parsers;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-public final class Rule<T> implements Parser<T> {
+public final class Identifier<T> implements Parser<T> {
 
-    private Parser<T> _parser = new NothingParser<>();
+    private Parser<? extends T> _parser = new NothingParser<>();
 
     public ParseResult<T> parse(Scanner scanner) {
-        return _parser.parse(scanner);
+        var parseResult = _parser.parse(scanner);
+        if (parseResult.isSuccess()) {
+            return ParseResult.success((T)parseResult.getValue());
+        }
+        return ParseResult.failure();
     }
 
-    public void is(Parser<T> parser) {
+    public void is(Parser<? extends T> parser) {
         _parser = parser;
     }
 }

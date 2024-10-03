@@ -25,6 +25,14 @@ final class Patterns {
 
     private Patterns() {}
 
+    public static Pattern emptyString() {
+        return new StringPattern("");
+    }
+
+    public static Pattern string(String literal) {
+        return new StringPattern(literal);
+    }
+
     public static CharacterPattern character(Character literal) {
         return new CharacterPattern((character) -> character == literal);
     }
@@ -54,26 +62,18 @@ final class Patterns {
     }
 
     public static CharacterPattern range(char firstCharacter, char lastCharacter) {
-        return new CharacterPattern(Predicates.isInRange(firstCharacter, lastCharacter));
+        return new CharacterPattern((character) -> character >= firstCharacter && character <= lastCharacter);
     }
 
     public static CharacterPattern any() {
         return new CharacterPattern((character) -> character != '\n');
     }
 
-    public static Pattern string(String literal) {
-        return new StringPattern(literal);
-    }
-
-    public static Pattern emptyString() {
-        return new StringPattern("");
-    }
-
-    public static Pattern oneOf(Pattern... patterns) {
+    public static Pattern anyOf(Pattern... patterns) {
         return new AlternativePattern(patterns);
     }
 
-    public static Pattern oneOf(List<Pattern> patterns) {
+    public static Pattern anyOf(List<Pattern> patterns) {
         return new AlternativePattern(patterns);
     }
 
