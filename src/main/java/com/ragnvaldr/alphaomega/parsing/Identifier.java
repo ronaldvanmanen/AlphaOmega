@@ -23,7 +23,7 @@ import com.ragnvaldr.alphaomega.Scanner;
 
 public final class Identifier<T> implements Parser<T> {
 
-    private Parser<? extends T> _parser = new NothingParser<>();
+    private Parser<? extends T> _parser = new FailureParser<>();
 
     public ParseResult<T> parse(Scanner scanner) {
         var parseResult = _parser.parse(scanner);

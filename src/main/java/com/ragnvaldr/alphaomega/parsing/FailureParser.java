@@ -21,9 +21,9 @@ package com.ragnvaldr.alphaomega.parsing;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-final class NothingParser<T> implements Parser<T> {
+final class FailureParser<T> implements Parser<T> {
 
-    NothingParser() {}
+    FailureParser() {}
 
     public ParseResult<T> parse(Scanner scanner) {
         return ParseResult.failure();
