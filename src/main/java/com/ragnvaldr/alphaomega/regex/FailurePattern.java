@@ -21,10 +21,10 @@ package com.ragnvaldr.alphaomega.regex;
 
 import com.ragnvaldr.alphaomega.Scanner;
 
-final class NothingPattern extends Pattern {
+final class FailurePattern extends Pattern {
 
     @Override
-    public boolean matches(Scanner scanner) {
-        return false;
+    public MatchResult match(Scanner scanner) {
+        return MatchResult.failure();
     }
 }

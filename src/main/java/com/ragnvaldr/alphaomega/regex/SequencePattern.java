@@ -35,16 +35,19 @@ final class SequencePattern extends Pattern {
         this.patterns = patterns;
     }
 
-    public boolean matches(Scanner scanner) {
+    public MatchResult match(Scanner scanner) {
         var position = scanner.getPosition();
-
+        var stringBuilder = new StringBuilder();
         for (var pattern : patterns) {
-            if (!pattern.matches(scanner)) {
+            var matchResult = pattern.match(scanner);
+            if (matchResult.isSuccess()) {
+                stringBuilder.append(matchResult.getValue());
+            }
+            else {
                 scanner.setPosition(position);
-                return false;
+                return MatchResult.failure();
             }
         }
-
-        return true;
+        return MatchResult.success(stringBuilder.toString());
     }
 }

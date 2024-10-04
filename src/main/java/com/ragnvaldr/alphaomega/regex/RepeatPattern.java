@@ -36,16 +36,22 @@ final class RepeatPattern extends Pattern {
         this.upperBound = upperBound;
     }
 
-    public boolean matches(Scanner scanner) {
+    public MatchResult match(Scanner scanner) {
         var position = scanner.getPosition();
         var count = 0;
-        while (count < upperBound && pattern.matches(scanner)) {
+        var stringBuilder = new StringBuilder();
+        while (count < upperBound) {
+            var matchResult = pattern.match(scanner);
+            if (matchResult.isFailure()) {
+                break;
+            }
+            stringBuilder.append(matchResult.getValue());
             ++count;
         }
         if (count >= lowerBound && count <= upperBound) {
-            return true;
+            return MatchResult.success(stringBuilder.toString());
         }
         scanner.setPosition(position);
-        return false;
+        return MatchResult.failure();
     }
 }

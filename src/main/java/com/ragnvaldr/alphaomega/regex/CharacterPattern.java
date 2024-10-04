@@ -31,14 +31,14 @@ final class CharacterPattern extends Pattern {
         this.predicate = predicate;
     }
 
-    public boolean matches(Scanner scanner) {
+    public MatchResult match(Scanner scanner) {
         var position = scanner.getPosition();
         var character = scanner.read();
         if (character != -1 && predicate.test((char)character)) {
-            return true;
+            return MatchResult.success(String.valueOf((char)character));
         }
         scanner.setPosition(position);
-        return false;
+        return MatchResult.failure();
     }
 
     public CharacterPattern negate() {

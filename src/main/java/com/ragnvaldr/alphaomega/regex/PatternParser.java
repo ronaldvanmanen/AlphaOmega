@@ -20,11 +20,11 @@
 package com.ragnvaldr.alphaomega.regex;
 
 
-import static com.ragnvaldr.alphaomega.parsing.Parsers.*;
-
 import com.ragnvaldr.alphaomega.*;
 import com.ragnvaldr.alphaomega.parsing.*;
 import com.ragnvaldr.alphaomega.util.*;
+
+import static com.ragnvaldr.alphaomega.parsing.Parsers.*;
 
 final class PatternParser implements Parser<Pattern> {
 

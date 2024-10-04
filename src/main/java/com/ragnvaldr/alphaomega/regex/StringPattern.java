@@ -30,15 +30,15 @@ final class StringPattern extends Pattern {
     }
 
     @Override
-    public boolean matches(Scanner scanner) {
+    public MatchResult match(Scanner scanner) {
         var position = scanner.getPosition();
         for (var index = 0; index < string.length(); ++index) {
             var character = scanner.read();
             if (character != string.charAt(index)) {
                 scanner.setPosition(position);
-                return false;
+                return MatchResult.failure();
             }
         }
-        return true;
+        return MatchResult.success(string);
     }
 }

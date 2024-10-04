@@ -38,6 +38,16 @@ public abstract class Pattern {
         return matches(new Scanner(input));
     }
 
-    public abstract boolean matches(Scanner scanner);
+    public boolean matches(Scanner scanner) {
+        var matchResult = match(scanner);
+        var isSuccess = matchResult.isSuccess();
+        return isSuccess;
+    }
+
+    public MatchResult match(String input) {
+        return match(new Scanner(input));
+    }
+
+    public abstract MatchResult match(Scanner scanner);
 
 }

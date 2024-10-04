@@ -35,12 +35,13 @@ final class AlternativePattern extends Pattern {
         this.patterns = patterns.toArray(new Pattern[0]);
     }
 
-    public boolean matches(Scanner scanner) {
+    public MatchResult match(Scanner scanner) {
         var position = scanner.getPosition();
 
         for (var pattern : patterns) {
-            if (pattern.matches(scanner)) {
-                return true;
+            var matchResult = pattern.match(scanner);
+            if (matchResult.isSuccess()) {
+                return matchResult;
             } else {
                 scanner.setPosition(position);
             }
@@ -48,6 +49,6 @@ final class AlternativePattern extends Pattern {
 
         scanner.setPosition(position);
 
-        return false;
+        return MatchResult.failure();
     }
 }

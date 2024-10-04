@@ -19,6 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.
 package com.ragnvaldr.alphaomega.regex;
 
+import java.util.NoSuchElementException;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -29,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 final class PatternTests {
 
     @Test
-    void parseAnyCharacter() {
+    void matchesAnyCharacter() {
         var pattern = Pattern.parse(".");
         chars().forEach(c -> {
             assertEquals(
@@ -39,7 +41,25 @@ final class PatternTests {
     }
 
     @Test
-    void parseNormalCharacter() {
+    void matchAnyCharacter() {
+        var pattern = Pattern.parse(".");
+        chars().forEach(c -> {
+            var input = String.valueOf(c);
+            var matchResult = pattern.match(input);
+            if (c != '\n') {
+                assertTrue(matchResult.isSuccess());
+                assertFalse(matchResult.isFailure());
+                assertEquals(input, matchResult.getValue());
+            } else {
+                assertFalse(matchResult.isSuccess());
+                assertTrue(matchResult.isFailure());
+                assertThrows(NoSuchElementException.class, () -> matchResult.getValue());
+            }
+        });
+    }
+
+    @Test
+    void matchNormalCharacter() {
         var pattern = Pattern.parse("a");
         chars().forEach(c -> {
             assertEquals(
@@ -49,7 +69,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseBell() {
+    void matchBell() {
         var pattern = Pattern.parse("\\a");
         chars().forEach(c -> {
             assertEquals(
@@ -59,7 +79,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseEscape() {
+    void matchEscape() {
         var pattern = Pattern.parse("\\e");
         chars().forEach(c -> {
             assertEquals(
@@ -69,7 +89,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseNewline() {
+    void matchNewline() {
         var pattern = Pattern.parse("\\n");
         chars().forEach(c -> {
             assertEquals(
@@ -79,7 +99,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseCarriageReturn() {
+    void matchesCarriageReturn() {
         var pattern = Pattern.parse("\\r");
         chars().forEach(c -> {
             assertEquals(
@@ -89,7 +109,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseHorizontalTabulation() {
+    void matchesHorizontalTabulation() {
         var pattern = Pattern.parse("\\t");
         chars().forEach(c -> {
             assertEquals(
@@ -99,7 +119,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseDigit() {
+    void matchesDigit() {
         var pattern = Pattern.parse("\\d");
         chars().forEach(c -> {
             assertEquals(
@@ -109,7 +129,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseNonDigit() {
+    void matchesNonDigit() {
         var pattern = Pattern.parse("\\D");
         chars().forEach(c -> {
             assertEquals(
@@ -119,7 +139,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseWhitespace() {
+    void matchesWhitespace() {
         var pattern = Pattern.parse("\\s");
         chars().forEach(c -> {
             assertEquals(
@@ -129,7 +149,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseNonWhitespace() {
+    void matchesNonWhitespace() {
         var pattern = Pattern.parse("\\S");
         chars().forEach(c -> {
             assertEquals(
@@ -139,7 +159,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseWord() {
+    void matchesWord() {
         var pattern = Pattern.parse("\\w");
         chars().forEach(c -> {
             assertEquals(
@@ -149,7 +169,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseNonWord() {
+    void matchesNonWord() {
         var pattern = Pattern.parse("\\W");
         chars().forEach(c -> {
             assertEquals(
@@ -159,7 +179,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseSinglePositiveCharacterRange() {
+    void matchesSinglePositiveCharacterRange() {
         var pattern = Pattern.parse("[0-9]");
         chars().forEach(c -> {
             assertEquals(
@@ -169,7 +189,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseMultiplePositiveCharacterRange() {
+    void matchesMultiplePositiveCharacterRange() {
         var pattern = Pattern.parse("[0-9a-zA-Z]");
         chars().forEach(c -> {
             assertEquals(
@@ -181,7 +201,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseNegativeCharacterRange() {
+    void matchesNegativeCharacterRange() {
         var pattern = Pattern.parse("[^0-9]");
         chars().forEach(c -> {
             assertEquals(
@@ -191,7 +211,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseMultipleNegativeCharacterRange() {
+    void matchesMultipleNegativeCharacterRange() {
         var pattern = Pattern.parse("[^0-9a-zA-Z]");
         chars().forEach(c -> {
             assertEquals(
@@ -203,7 +223,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseAlternative() {
+    void matchesAlternative() {
         var pattern = Pattern.parse("cat|cataract|caterpillar");
         assertTrue(pattern.matches("cat"));
         assertTrue(pattern.matches("cataract"));
@@ -211,7 +231,7 @@ final class PatternTests {
     }
 
     @Test
-    void parseGroup() {
+    void matchesGroup() {
         var pattern = Pattern.parse("cat(aract|erpillar|)");
         assertTrue(pattern.matches("cat"));
         assertTrue(pattern.matches("cataract"));
