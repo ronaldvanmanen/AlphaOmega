@@ -1,5 +1,12 @@
 {
     "editor.renderWhitespace": "all",
+    "coverage-gutters.showLineCoverage": true,
+    "coverage-gutters.coverageReportFileName": "build/reports/jacoco/test/html/index.html",
+    "coverage-gutters.remotePathResolve": ["/var/www/", "./"],
+    "coverage-gutters.coverageBaseDir": "build/reports/**",
+    "coverage-gutters.coverageFileNames": [
+        "jacocoTestReport.xml",
+    ],
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.inlayHints.parameterNames.enabled": "none",
@@ -15,5 +22,5 @@
     },
     "[gradle]": {
         "editor.defaultFormatter": "richardwillis.vscode-spotless-gradle"
-    }
+    },
 }

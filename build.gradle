@@ -1,9 +1,11 @@
 plugins {
-    id 'java'
+    id "com.diffplug.spotless" version "6.25.0"
+    id 'org.graalvm.buildtools.native' version '0.10.3'
     id 'org.springframework.boot' version '3.3.4'
     id 'io.spring.dependency-management' version '1.1.6'
-    id 'org.graalvm.buildtools.native' version '0.10.3'
-    id "com.diffplug.spotless" version "6.25.0"
+    id 'jacoco'
+    id 'java'
+    id 'test-report-aggregation'
 }
 
 group = 'com.ragnvaldr'
@@ -39,6 +41,10 @@ dependencyManagement {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.12"
+}
+
 test {
     testLogging {
         events "passed", "skipped", "failed"
@@ -48,10 +54,18 @@ test {
         showStackTraces true
         showStandardStreams false
     }
+    finalizedBy jacocoTestReport
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
+    dependsOn test
 }
 
 spotless {
