@@ -23,7 +23,7 @@ repositories {
 }
 
 ext {
-    set('springShellVersion', "3.3.2")
+    set('springShellVersion', '3.3.2')
 }
 
 dependencies {
@@ -31,8 +31,10 @@ dependencies {
     implementation 'org.springframework.shell:spring-shell-starter:3.3.3'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.4'
     testImplementation 'org.springframework.shell:spring-shell-starter-test:3.3.3'
+    testImplementation 'net.jqwik:jqwik:1.9.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.0'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    compileOnly 'org.jetbrains:annotations:23.0.0'
 }
 
 dependencyManagement {
@@ -42,23 +44,25 @@ dependencyManagement {
 }
 
 jacoco {
-    toolVersion = "0.8.12"
+    toolVersion = '0.8.12'
 }
 
 test {
+    useJUnitPlatform
+    {
+        includeEngines 'jqwik', 'junit-jupiter'
+    }
+
     testLogging {
-        events "passed", "skipped", "failed"
-        exceptionFormat "full"
+        events 'passed', 'skipped', 'failed'
+        exceptionFormat 'full'
         showCauses true
         showExceptions true
         showStackTraces true
         showStandardStreams false
     }
-    finalizedBy jacocoTestReport
-}
 
-tasks.named('test') {
-    useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
