@@ -21,7 +21,7 @@ package com.ragnvaldr.alphaomega.parsing;
 
 import java.util.Optional;
 
-import com.ragnvaldr.alphaomega.Scanner;
+import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 public final class OptionalParser<T> implements Parser<Optional<T>> {
 

@@ -19,7 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 package com.ragnvaldr.alphaomega.regex;
 
-import com.ragnvaldr.alphaomega.Scanner;
+import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 final class RepeatPattern extends Pattern {
 

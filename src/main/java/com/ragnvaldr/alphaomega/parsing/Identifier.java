@@ -19,7 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 package com.ragnvaldr.alphaomega.parsing;
 
-import com.ragnvaldr.alphaomega.Scanner;
+import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 public final class Identifier<T> implements Parser<T> {
 

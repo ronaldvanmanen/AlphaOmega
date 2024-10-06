@@ -21,7 +21,7 @@ package com.ragnvaldr.alphaomega.regex;
 
 import java.util.List;
 
-import com.ragnvaldr.alphaomega.Scanner;
+import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 final class AlternativePattern extends Pattern {
 

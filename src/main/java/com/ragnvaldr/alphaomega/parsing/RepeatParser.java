@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.ragnvaldr.alphaomega.Scanner;
+import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 public final class RepeatParser<T> implements Parser<List<T>> {
 

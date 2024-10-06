@@ -21,7 +21,7 @@ package com.ragnvaldr.alphaomega.parsing;
 
 import java.util.function.Predicate;
 
-import com.ragnvaldr.alphaomega.Scanner;
+import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 public final class CharacterParser implements Parser<Character> {
 

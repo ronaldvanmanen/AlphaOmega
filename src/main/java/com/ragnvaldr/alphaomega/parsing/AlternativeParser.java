@@ -19,7 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 package com.ragnvaldr.alphaomega.parsing;
 
-import com.ragnvaldr.alphaomega.Scanner;
+import com.ragnvaldr.alphaomega.scanning.Scanner;
 import com.ragnvaldr.alphaomega.util.Either;
 
 public final class AlternativeParser<T, S> implements Parser<Either<T, S>> {

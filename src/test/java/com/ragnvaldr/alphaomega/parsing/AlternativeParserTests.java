@@ -21,7 +21,7 @@ package com.ragnvaldr.alphaomega.parsing;
 
 import java.util.NoSuchElementException;
 
-import com.ragnvaldr.alphaomega.Scanner;
+import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

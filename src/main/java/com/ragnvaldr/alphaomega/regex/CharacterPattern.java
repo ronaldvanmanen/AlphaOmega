@@ -21,7 +21,7 @@ package com.ragnvaldr.alphaomega.regex;
 
 import java.util.function.Predicate;
 
-import com.ragnvaldr.alphaomega.Scanner;
+import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 final class CharacterPattern extends Pattern {
 

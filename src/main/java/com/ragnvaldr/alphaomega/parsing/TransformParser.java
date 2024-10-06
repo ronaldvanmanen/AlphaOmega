@@ -22,7 +22,7 @@ package com.ragnvaldr.alphaomega.parsing;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.ragnvaldr.alphaomega.Scanner;
+import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 public final class TransformParser<TTarget, TSource> implements Parser<TTarget> {
 
