@@ -21,6 +21,9 @@ package com.ragnvaldr.alphaomega.parsing;
 
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 
+/**
+ * The {@link StringParser} class is a parser that matches a character string.
+ */
 public final class StringParser implements Parser<String> {
 
     private String string;

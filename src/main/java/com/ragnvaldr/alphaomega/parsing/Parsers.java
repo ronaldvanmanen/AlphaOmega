@@ -29,18 +29,42 @@ import com.ragnvaldr.alphaomega.util.Pair;
 import com.ragnvaldr.alphaomega.util.Triple;
 import com.ragnvaldr.alphaomega.util.Unused;
 
+/**
+ * The {@link Parsers} class consists exclusively of static factory methods that can be used to create and combine parsers.
+ */
 public final class Parsers {
 
     private Parsers() {}
 
+    /**
+     * Returns a parser that matches {@code character}.
+     *
+     * @param character The character to match.
+     * @return A parser that matches {@code character}.
+     */
     public static CharacterParser literal(char character) {
         return new CharacterParser((c) -> c == character);
     }
 
+    /**
+     * Returns a parser that matches a range of characters.
+     *
+     * @param firstCharacter The first character in the range.
+     * @param firstCharacter The last character in the range.
+     *
+     * @return A parser that matches the range [{@code firstCharacter}, {@code lastCharacter}].
+     */
     public static CharacterParser range(char firstCharacter, char lastCharacter) {
         return new CharacterParser((character) -> character >= firstCharacter && character <= lastCharacter);
     }
 
+    /**
+     * Returns a parser that matches any of the specified characters.
+     *
+     * @param characters A set of characters.
+     *
+     * @return A parser that matches any of the specified characters
+     */
     public static CharacterParser anyOf(Character... characters) {
         return anyOf(Set.of(characters));
     }
@@ -49,6 +73,13 @@ public final class Parsers {
         return new CharacterParser((c) -> characters.contains(c));
     }
 
+    /**
+     * Returns a parser that matches none of the specified characters.
+     *
+     * @param characters A set of characters.
+     *
+     * @return A parser that matches none of the specified characters
+     */
     public static CharacterParser noneOf(Character... characters) {
         return noneOf(Set.of(characters));
     }
@@ -57,26 +88,44 @@ public final class Parsers {
         return new CharacterParser((c) -> !characters.contains(c));
     }
 
+    /**
+     * Returns a parser that matches any character that is a digit.
+     */
     public static CharacterParser digit() {
         return new CharacterParser(Character::isDigit);
     }
 
+    /**
+     * Returns a parser that matches any character that is a letter.
+     */
     public static CharacterParser letter() {
         return new CharacterParser(Character::isLetter);
     }
 
+    /**
+     * Returns a parser that matches any character that is a letter or digit.
+     */
     public static CharacterParser letterOrDigit() {
         return new CharacterParser(Character::isLetterOrDigit);
     }
 
+    /**
+     * Returns a parser that matches any character that is a lowercase letter.
+     */
     public static CharacterParser lowerCaseLetter() {
         return new CharacterParser(Character::isLowerCase);
     }
 
+    /**
+     * Returns a parser that matches any character that is a uppercase letter.
+     */
     public static CharacterParser upperCaseLetter() {
         return new CharacterParser(Character::isUpperCase);
     }
 
+    /**
+     * Returns a parser that matches any character that is white space.
+     */
     public static CharacterParser whitespace() {
         return new CharacterParser(Character::isWhitespace);
     }

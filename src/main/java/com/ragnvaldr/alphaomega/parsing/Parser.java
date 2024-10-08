@@ -21,8 +21,18 @@ package com.ragnvaldr.alphaomega.parsing;
 
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 
+/**
+ * Defines the requirements for all parsers.
+ */
 public interface Parser<T> {
 
+    /**
+     * Parse the characters provided by the specified scanner.
+     *
+     * @param scanner The scanner providing characters.
+     *
+     * @return A {@link ParseResult} indicating whether the parse was successfull or not.
+     */
     public ParseResult<T> parse(Scanner scanner);
 
 }

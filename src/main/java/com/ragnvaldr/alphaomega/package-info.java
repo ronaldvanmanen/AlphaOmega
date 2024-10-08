@@ -22,4 +22,5 @@
 @NonNullApi
 package com.ragnvaldr.alphaomega;
 
-import org.springframework.lang.*;
+import org.springframework.lang.NonNullApi;
+import org.springframework.lang.NonNullFields;

@@ -21,6 +21,9 @@ package com.ragnvaldr.alphaomega.util;
 
 import java.util.NoSuchElementException;
 
+/**
+ * The {@link Either} class is represents a value of one of two possible types.
+ */
 public abstract class Either<T, S> {
 
     static final class Left<T, S> extends Either<T, S> {
@@ -71,16 +74,42 @@ public abstract class Either<T, S> {
         }
     }
 
+    /**
+     * Creates a left-value.
+     *
+     * @param <T> The type of the left-value.
+     * @param <S> The type of the right-value.
+     * @param value The left-value.
+     * @return
+     */
     public static <T, S> Either<T, S> left(T value) {
         return new Left<T, S>(value);
     }
 
+    /**
+     * Creates a right-value.
+     *
+     * @param <T> The type of the left-value.
+     * @param <S> The type of the right-value.
+     * @param value The left-value.
+     * @return
+     */
     public static <T, S> Either<T, S> right(S value) {
         return new Right<T, S>(value);
     }
 
+    /**
+     * Return whether the given value is a left-value or not.
+     *
+     * @return {@code true} if the given value is a left-value; otherwise, {@code false}.
+     */
     public abstract boolean isLeft();
 
+    /**
+     * Return whether the given value is a right-value or not.
+     *
+     * @return {@code true} if the given value is a right-value; otherwise, {@code false}.
+     */
     public boolean isRight() {
         return !isLeft();
     }

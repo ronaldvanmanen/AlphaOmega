@@ -19,8 +19,20 @@
 // 3. This notice may not be removed or altered from any source distribution.
 package com.ragnvaldr.alphaomega.util;
 
+/**
+ * The {@link Pair} class represents an ordered pair of objects.
+ */
 public final record Pair<T1, T2>(T1 first, T2 second) {
 
+    /**
+     * Creates a {@link Pair} with the specified values.
+     *
+     * @param <T1> The type of the first value.
+     * @param <T2> The type of the second value.
+     * @param first The first value.
+     * @param second The second value.
+     * @return A {@link Pair} with the specified values.
+     */
     public static <T1, T2> Pair<T1, T2> of(T1 first, T2 second) {
         return new Pair<>(first, second);
     }

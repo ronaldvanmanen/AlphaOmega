@@ -21,6 +21,12 @@ package com.ragnvaldr.alphaomega.parsing;
 
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 
+/**
+ * The {@link IntegerParser} class is a parser that matches integers. It
+ * supports parsing signed and unsigned integers, with a variety of radices (or
+ * bases), an optional minimum number of digits, and an optional maximum number
+ * of digits.
+ */
 public final class IntegerParser implements Parser<Integer> {
 
     private boolean signed;
@@ -34,17 +40,13 @@ public final class IntegerParser implements Parser<Integer> {
     IntegerParser(boolean signed, int radix, int minDigits, int maxDigits) {
         if (radix < 2 || radix > 36)
             throw new IllegalArgumentException(
-                "The radix must lie between 2 and 36.");
+                "The radix base must lie between 2 and 36.");
         if (minDigits < 0)
             throw new IllegalArgumentException(
                 "The minimum number of digits must greater than zero");
-        if (maxDigits < 0)
+        if (maxDigits < minDigits)
             throw new IllegalArgumentException(
-                "The maximum number of digits must greater than zero");
-        if (minDigits > maxDigits)
-            throw new IllegalArgumentException(
-                "The minimum number of digits must be less than " +
-                "or equal to the maximum number of digits.");
+                "The maximum number of digits must be greater than or equal to the minimum number of digits.");
 
         this.signed = signed;
         this.radix = radix;
@@ -91,7 +93,7 @@ public final class IntegerParser implements Parser<Integer> {
         return ParseResult.failure();
     }
 
-    private int ToDigit(char character) {
+    private static int ToDigit(char character) {
         if (character >= '0' && character <= '9') {
             return character - '0';
         } else {

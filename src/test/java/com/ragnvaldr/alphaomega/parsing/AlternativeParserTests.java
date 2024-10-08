@@ -43,10 +43,14 @@ final class AlternativeParserTests {
         var parseResult = parser.parse(scanner);
 
         assertTrue(parseResult.isSuccess());
-        assertTrue(parseResult.getValue().isLeft());
-        assertFalse(parseResult.getValue().isRight());
-        assertEquals("Hello", parseResult.getValue().getLeft());
-        assertThrows(NoSuchElementException.class, () -> parseResult.getValue().getRight());
+
+        var parseValue = parseResult.getValue();
+
+        assertTrue(parseValue.isLeft());
+        assertFalse(parseValue.isRight());
+        assertEquals("Hello", parseValue.getLeft());
+        assertThrows(NoSuchElementException.class, () -> parseValue.getRight());
+
         assertEquals(5, scanner.getPosition() - initialPosition);
     }
 
@@ -62,15 +66,19 @@ final class AlternativeParserTests {
         var parseResult = parser.parse(scanner);
 
         assertTrue(parseResult.isSuccess());
-        assertFalse(parseResult.getValue().isLeft());
-        assertTrue(parseResult.getValue().isRight());
-        assertThrows(NoSuchElementException.class, () -> parseResult.getValue().getLeft());
+
+        var parseValue = parseResult.getValue();
+
+        assertFalse(parseValue.isLeft());
+        assertTrue(parseValue.isRight());
+        assertThrows(NoSuchElementException.class, () -> parseValue.getLeft());
         assertEquals("Hello", parseResult.getValue().getRight());
+
         assertEquals(5, scanner.getPosition() - initialPosition);
     }
 
     @Test
-    void parseFailsWhenLeftParserAndRightParserDontMatch() {
+    void parseFailsWhenBothParserDontMatch() {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
         var parser = new AlternativeParser<>(

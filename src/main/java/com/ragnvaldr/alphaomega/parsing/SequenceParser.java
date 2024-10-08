@@ -22,12 +22,23 @@ package com.ragnvaldr.alphaomega.parsing;
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 import com.ragnvaldr.alphaomega.util.Pair;
 
+/**
+ * The {@link SequenceParser} class is a parser that returns the combined parse
+ * result of the first operand followed by the second operand, if, and only if,
+ * both operands successfully match.
+ */
 public final class SequenceParser<T, S> implements Parser<Pair<T, S>> {
 
     private Parser<T> left;
 
     private Parser<S> right;
 
+    /**
+     * Creates a new {@link SequenceParser} with the specified operands.
+     *
+     * @param left The left operand.
+     * @param right The right operand.
+     */
     SequenceParser(Parser<T> left, Parser<S> right) {
         this.left = left;
         this.right = right;
