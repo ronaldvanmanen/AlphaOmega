@@ -21,6 +21,10 @@ package com.ragnvaldr.alphaomega.parsing;
 
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 
+/**
+ * The {@link Identifier} class is a non-terminal parser that can be used to
+ * reference a parser.
+ */
 public final class Identifier<T> implements Parser<T> {
 
     private Parser<? extends T> _parser = new FailureParser<>();

@@ -24,6 +24,10 @@ import java.util.function.Supplier;
 
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 
+/**
+ * The {@link TransformParser} class is a parser that can be used to transforms
+ * the value returned by another parser on a successfull match.
+ */
 public final class TransformParser<TTarget, TSource> implements Parser<TTarget> {
 
     private Parser<TSource> parser;

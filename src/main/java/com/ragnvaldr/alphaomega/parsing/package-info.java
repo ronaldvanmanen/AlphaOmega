@@ -18,8 +18,12 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+/**
+ * Provides the classes for building recursive descent parsers.
+ */
 @NonNullApi
 @NonNullFields
 package com.ragnvaldr.alphaomega.parsing;
 
-import org.springframework.lang.*;
+import org.springframework.lang.NonNullApi;
+import org.springframework.lang.NonNullFields;

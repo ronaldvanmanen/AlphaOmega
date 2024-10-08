@@ -19,8 +19,6 @@
 // 3. This notice may not be removed or altered from any source distribution.
 package com.ragnvaldr.alphaomega.regex;
 
-
-import com.ragnvaldr.alphaomega.*;
 import com.ragnvaldr.alphaomega.parsing.*;
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 import com.ragnvaldr.alphaomega.util.*;

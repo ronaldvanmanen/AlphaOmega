@@ -23,6 +23,11 @@ import java.util.Optional;
 
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 
+/**
+ * The {@link OptionalParser} class is a parser that returns the parse result
+ * of another parser when that parser is successfully matched. Otherwise, the
+ * {@link OptionalParser} will return an empty parse result.
+ */
 public final class OptionalParser<T> implements Parser<Optional<T>> {
 
     private Parser<T> parser;

@@ -21,6 +21,9 @@ package com.ragnvaldr.alphaomega.parsing;
 
 import java.util.NoSuchElementException;
 
+/**
+ * The {@link ParseResult} class captures the result of a parser.
+ */
 public abstract class ParseResult<T> {
 
     static final class Success<T> extends ParseResult<T> {
@@ -59,20 +62,45 @@ public abstract class ParseResult<T> {
 
     ParseResult() { }
 
+    /**
+     * Creates a {@link ParseResult} that indicates that a parser successfully
+     * matched the specified value.
+     *
+     * @param <T> The type of value that was parsed by a parser.
+     * @param value The value that was parsed by a parser.
+     * @return A {@link ParseResult} with the specified value.
+     */
     public static <T> ParseResult<T> success(T value) {
         return new Success<>(value);
     }
 
+    /**
+     * Creates a {@link ParseResult} that indicates that a parser unsuccessfully matched.
+     */
     public static <T> ParseResult<T> failure() {
         return new Failure<>();
     }
 
+    /**
+     * Returns whether a parser successfully matched.
+     *
+     * @return true if the parser successfully matched; false, otherwise.
+     */
     public abstract boolean isSuccess();
 
+    /**
+     * Returns whether a parser failed to match.
+     *
+     * @return true if the parser failed to matched; false, otherwise.
+     */
     public boolean isFailure() {
         return !isSuccess();
     }
 
+    /**
+     * Returns the parsed value.
+     *
+     * @return
+     */
     public abstract T getValue();
-
 }

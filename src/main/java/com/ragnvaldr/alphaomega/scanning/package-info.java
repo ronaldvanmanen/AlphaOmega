@@ -17,19 +17,13 @@
 // 2. Altered source versions must be plainly marked as such, and must not be
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
-package com.ragnvaldr.alphaomega.parsing;
-
-import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 /**
- * The {@link FailureParser} class is a parser that matches nothing.
+ * Provides the classes for scanning.
  */
-public final class FailureParser<T> implements Parser<T> {
+@NonNullApi
+@NonNullFields
+package com.ragnvaldr.alphaomega.scanning;
 
-    FailureParser() {}
-
-    public ParseResult<T> parse(Scanner scanner) {
-        return ParseResult.failure();
-    }
-
-}
+import org.springframework.lang.NonNullApi;
+import org.springframework.lang.NonNullFields;

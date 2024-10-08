@@ -22,10 +22,20 @@ package com.ragnvaldr.alphaomega.parsing;
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 import com.ragnvaldr.alphaomega.util.Unused;
 
+/**
+ * The {@link OmitParser} class is a parser that can be used to omit the value
+ * returned by another parser on a successfull match.
+ */
 public final class OmitParser<T> implements Parser<Unused> {
 
     private Parser<T> parser;
 
+    /**
+     * Creates a new {@link OmitParser} that omits the value of the specified
+     * parser when that parser returns a successfull match.
+     *
+     * @param parser The parser to omit the parse result of.
+     */
     OmitParser(Parser<T> parser) {
         this.parser = parser;
     }

@@ -22,12 +22,28 @@ package com.ragnvaldr.alphaomega.parsing;
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 import com.ragnvaldr.alphaomega.util.Either;
 
+/**
+ * The {@link AlternativeParser} class is a parser that returns the result of
+ * either one of two operands.
+ *
+ * The left operand is tried first and if, and only if, successfully matched
+ * it's result will be returned immediately, and the right operand will never
+ * be tried. Otherwise, the right operand will be tried and if, and only if,
+ * successfully matched it's result will be returned. When both operands fail
+ * the {@link AlternativeParser} fails.
+ */
 public final class AlternativeParser<T, S> implements Parser<Either<T, S>> {
 
     private Parser<T> left;
 
     private Parser<S> right;
 
+    /**
+     * Creates a {@link AlternativeParser} with the specified operands.
+     *
+     * @param left The left operand.
+     * @param right The right operand.
+     */
     AlternativeParser(Parser<T> left, Parser<S> right) {
         this.left = left;
         this.right = right;
