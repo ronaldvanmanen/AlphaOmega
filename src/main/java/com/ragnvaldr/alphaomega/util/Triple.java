@@ -19,8 +19,22 @@
 // 3. This notice may not be removed or altered from any source distribution.
 package com.ragnvaldr.alphaomega.util;
 
+/**
+ * The {@link Triple} class represents an ordered triplet of objects.
+ */
 public final record Triple<T1, T2, T3>(T1 first, T2 second, T3 third) {
 
+    /**
+     * Creates a {@link Triple} with the specified values.
+     *
+     * @param <T1> The type of the first value.
+     * @param <T2> The type of the second value.
+     * @param <T3> The type of the third value.
+     * @param first The first value.
+     * @param second The second value.
+     * @param third The third value.
+     * @return A {@link Triple} with the specified values.
+     */
     public static <T1, T2, T3> Triple<T1, T2, T3> of(T1 first, T2 second, T3 third) {
         return new Triple<>(first, second, third);
     }

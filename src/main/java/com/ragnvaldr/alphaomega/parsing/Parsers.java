@@ -38,6 +38,7 @@ public final class Parsers {
 
     /**
      * Returns a parser that matches {@code character}.
+     *
      * @param character The character to match.
      * @return A parser that matches {@code character}.
      */
@@ -47,8 +48,10 @@ public final class Parsers {
 
     /**
      * Returns a parser that matches a range of characters.
+     *
      * @param firstCharacter The first character in the range.
      * @param firstCharacter The last character in the range.
+     *
      * @return A parser that matches the range [{@code firstCharacter}, {@code lastCharacter}].
      */
     public static CharacterParser range(char firstCharacter, char lastCharacter) {
@@ -57,7 +60,9 @@ public final class Parsers {
 
     /**
      * Returns a parser that matches any of the specified characters.
+     *
      * @param characters A set of characters.
+     *
      * @return A parser that matches any of the specified characters
      */
     public static CharacterParser anyOf(Character... characters) {
@@ -70,7 +75,9 @@ public final class Parsers {
 
     /**
      * Returns a parser that matches none of the specified characters.
+     *
      * @param characters A set of characters.
+     *
      * @return A parser that matches none of the specified characters
      */
     public static CharacterParser noneOf(Character... characters) {
@@ -88,22 +95,37 @@ public final class Parsers {
         return new CharacterParser(Character::isDigit);
     }
 
+    /**
+     * Returns a parser that matches any character that is a letter.
+     */
     public static CharacterParser letter() {
         return new CharacterParser(Character::isLetter);
     }
 
+    /**
+     * Returns a parser that matches any character that is a letter or digit.
+     */
     public static CharacterParser letterOrDigit() {
         return new CharacterParser(Character::isLetterOrDigit);
     }
 
+    /**
+     * Returns a parser that matches any character that is a lowercase letter.
+     */
     public static CharacterParser lowerCaseLetter() {
         return new CharacterParser(Character::isLowerCase);
     }
 
+    /**
+     * Returns a parser that matches any character that is a uppercase letter.
+     */
     public static CharacterParser upperCaseLetter() {
         return new CharacterParser(Character::isUpperCase);
     }
 
+    /**
+     * Returns a parser that matches any character that is white space.
+     */
     public static CharacterParser whitespace() {
         return new CharacterParser(Character::isWhitespace);
     }

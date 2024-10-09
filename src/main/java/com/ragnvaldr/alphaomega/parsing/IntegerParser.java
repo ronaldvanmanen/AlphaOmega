@@ -22,9 +22,10 @@ package com.ragnvaldr.alphaomega.parsing;
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 /**
- * The {@link IntegerParser} class is a parser that can be used to parse signed
- * and unsigned integers with a specific radix base, minimum number of digits,
- * and maximum number of digits.
+ * The {@link IntegerParser} class is a parser that matches integers. It
+ * supports parsing signed and unsigned integers, with a variety of radices (or
+ * bases), an optional minimum number of digits, and an optional maximum number
+ * of digits.
  */
 public final class IntegerParser implements Parser<Integer> {
 

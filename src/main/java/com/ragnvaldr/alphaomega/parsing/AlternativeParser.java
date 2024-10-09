@@ -24,9 +24,9 @@ import com.ragnvaldr.alphaomega.util.Either;
 
 /**
  * The {@link AlternativeParser} class is a parser that returns the result of
- * either one of two operands.
+ * either one of two parser.
  *
- * The left operand is tried first and if, and only if, successfully matched
+ * The first parser is tried first and if, and only if, it succeeds
  * it's result will be returned immediately, and the right operand will never
  * be tried. Otherwise, the right operand will be tried and if, and only if,
  * successfully matched it's result will be returned. When both operands fail
