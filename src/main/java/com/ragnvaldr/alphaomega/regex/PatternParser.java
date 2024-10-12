@@ -69,7 +69,7 @@ final class PatternParser implements Parser<Pattern> {
 
     private final Identifier<Character> pipe = new Identifier<>();
 
-    private final Identifier<Character> question = new Identifier<>();
+    private final Identifier<Character> questionMark = new Identifier<>();
 
     private final Identifier<Character> star = new Identifier<>();
 
@@ -234,9 +234,7 @@ final class PatternParser implements Parser<Pattern> {
         );
 
         characterRange.is(
-            anyOf(
-                multiCharacterRange, singleCharacterRange
-            )
+            anyOf(multiCharacterRange, singleCharacterRange)
         );
 
         multiCharacterRange.is(
@@ -309,7 +307,7 @@ final class PatternParser implements Parser<Pattern> {
 
         pipe.is(literal('|'));
 
-        question.is(literal('?'));
+        questionMark.is(literal('?'));
 
         star.is(literal('*'));
 

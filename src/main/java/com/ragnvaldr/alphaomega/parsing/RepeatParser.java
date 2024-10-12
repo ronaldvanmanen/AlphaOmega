@@ -25,12 +25,26 @@ import java.util.List;
 
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 
+/**
+ * The {@link RepeatParser} class is a parser that attempts to parse a sequence
+ * of elements using a specified parser, within a given range of repetitions.
+ *
+ * @param <T> The type of elements to be parsed.
+ */
 public final class RepeatParser<T> implements Parser<List<T>> {
 
     private Parser<T> parser;
     private int lowerBound;
     private int upperBound;
 
+    /**
+     * Creates a {@link RepeatParser} with the specified parser and bounds.
+     *
+     * @param parser The parser to be used for parsing elements.
+     * @param lowerBound The minimum number of times the parser should succeed.
+     * @param upperBound The maximum number of times the parser should succeed.
+     * @throws IllegalArgumentException if lowerBound is negative or upperBound is less than lowerBound.
+     */
     public RepeatParser(Parser<T> parser, int lowerBound, int upperBound) {
         if (lowerBound < 0 || upperBound < lowerBound) {
             throw new IllegalArgumentException("Invalid bounds");
@@ -41,6 +55,15 @@ public final class RepeatParser<T> implements Parser<List<T>> {
         this.upperBound = upperBound;
     }
 
+    /**
+     * Parses the input from the given scanner, attempting to match the parser
+     * between the specified lower and upper bounds.
+     *
+     * @param scanner The {@link Scanner} providing the input to be parsed.
+     *
+     * @return A ParseResult containing a list of parsed elements if the parsing
+     *         succeeds within the specified bounds, or a failure result otherwise.
+     */
     @Override
     public ParseResult<List<T>> parse(Scanner scanner) {
 

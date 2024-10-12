@@ -25,8 +25,8 @@ import java.util.function.Supplier;
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 /**
- * The {@link TransformParser} class is a parser that can be used to transforms
- * the value returned by another parser on a successfull match.
+ * The {@link TransformParser} class is a parser that transforms the value
+ * returned by another parser on a successfull match.
  */
 public final class TransformParser<TTarget, TSource> implements Parser<TTarget> {
 
@@ -34,15 +34,41 @@ public final class TransformParser<TTarget, TSource> implements Parser<TTarget> 
 
     private Function<? super TSource, ? extends TTarget> transform;
 
+    /**
+     * Creates a new {@link TransformParser} with the specified parser.
+     *
+     * @param parser The parser to transform the parse result of.
+     * @param transform The method used to transform the value of the parse
+     *                  returned by {@code parser} on successfull match.
+     */
     public TransformParser(Parser<TSource> parser, Supplier<? extends TTarget> transform) {
         this(parser, _ -> transform.get());
     }
 
+    /**
+     * Creates a new {@link TransformParser}.
+     *
+     * @param parser The parser to transform the parse result of.
+     * @param transform The method used to transform the value of the parse.
+     *
+     * result returned by {@code parser} on successfull match.
+     */
     public TransformParser(Parser<TSource> parser, Function<? super TSource, ? extends TTarget> transform) {
         this.parser = parser;
         this.transform = transform;
     }
 
+    /**
+     * Parses the input from the given scanner using the specified parser.
+     * If the parsing is successful, applies a transformation to the parsed value
+     * and returns a successful ParseResult with the transformed value.
+     * If the parsing fails, returns a failed ParseResult.
+     *
+     * @param scanner the Scanner providing the input to be parsed.
+     *
+     * @return a ParseResult containing the transformed value if parsing is successful,
+     *         or a failed ParseResult if parsing fails
+     */
     public ParseResult<TTarget> parse(Scanner scanner) {
         var parseResult = parser.parse(scanner);
         if (parseResult.isSuccess()) {

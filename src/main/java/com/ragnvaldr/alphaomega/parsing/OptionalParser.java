@@ -32,10 +32,24 @@ public final class OptionalParser<T> implements Parser<Optional<T>> {
 
     private Parser<T> parser;
 
+    /**
+     * Creates a new {@link OptionalParser}.
+     *
+     * @param parser The parser to be matched zero or one time(s).
+     */
     public OptionalParser(Parser<T> parser) {
         this.parser = parser;
     }
 
+    /**
+     * Parses the input from the given scanner and returns a ParseResult containing an Optional value.
+     * If the parsing is successful, the result will contain the parsed value wrapped in an Optional.
+     * If the parsing fails, the scanner's position is reset to its original state and the result will contain an empty Optional.
+     *
+     * @param scanner The {@link Scanner} providing the input to be parsed.
+     *
+     * @return a ParseResult containing an Optional value, which is either the parsed value or empty if parsing fails
+     */
     @Override
     public ParseResult<Optional<T>> parse(Scanner scanner) {
         var position = scanner.getPosition();

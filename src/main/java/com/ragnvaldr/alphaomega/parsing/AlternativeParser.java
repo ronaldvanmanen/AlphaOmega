@@ -37,16 +37,35 @@ public final class AlternativeParser<T, S> implements Parser<Either<T, S>> {
     private Parser<S> second;
 
     /**
-     * Creates a {@link AlternativeParser} with the specified operands.
+     * Creates a {@link AlternativeParser} with the specified parsers.
      *
-     * @param first The first alternative.
-     * @param second The second alternative.
+     * @param first The parser to try first.
+     * @param second The parser to try second.
      */
     public AlternativeParser(Parser<T> first, Parser<S> second) {
         this.first = first;
         this.second = second;
     }
 
+    /**
+     * Parses the input given two alternative parsers.
+     *
+     * It first attempts to parse the input with the first parser. If the first
+     * parser succeeds, it return a {@link ParseResult.Success} containing the
+     * value wrapped in an {@link Either.Left}.
+     *
+     * If the first parser fails, it resets the scanner's position and attempts
+     * to parse the input with the second parser. If the second parser succeeds,
+     * it returns a {@link ParseResult.Success} containing the value wrapped in
+     * an {@link Either.Right}. If both parsers fail, it resets the scanner's
+     * position and returns a {@link ParseResult.Failure}.
+     *
+     * @param scanner The {@link Scanner} providing the input to be parsed.
+     *
+     * @return A {@link ParseResult.Success} containing the parsed value wrapped
+     *         in an {@link Either}, or a {@link ParseResult.Failure} if both
+     *         parsers failed.
+     */
     @Override
     public ParseResult<Either<T, S>> parse(Scanner scanner) {
         var position = scanner.getPosition();

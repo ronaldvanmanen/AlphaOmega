@@ -22,13 +22,19 @@ package com.ragnvaldr.alphaomega.parsing;
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 /**
- * The {@link Identifier} class is a non-terminal parser that can be used to
- * reference a parser.
+ * The {@link Identifier} class is a non-terminal parser that can be used to identify and reference a parser expression.
  */
 public final class Identifier<T> implements Parser<T> {
 
     private Parser<? extends T> _parser = new FailureParser<>();
 
+    /**
+     * Parses the input from the given scanner using the internal parser.
+     *
+     * @param scanner The {@link Scanner} providing the input to be parsed.
+     *
+     * @return a ParseResult containing the parsed value if successful, or a failure result if parsing fails
+     */
     public ParseResult<T> parse(Scanner scanner) {
         var parseResult = _parser.parse(scanner);
         if (parseResult.isSuccess()) {
@@ -37,6 +43,11 @@ public final class Identifier<T> implements Parser<T> {
         return ParseResult.failure();
     }
 
+    /**
+     * Assigns the specified parser expression to this identifier.
+     *
+     * @param parser The parser expression to assign to this identifier.
+     */
     public void is(Parser<? extends T> parser) {
         _parser = parser;
     }

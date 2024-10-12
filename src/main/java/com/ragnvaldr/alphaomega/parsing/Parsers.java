@@ -39,7 +39,8 @@ public final class Parsers {
      * Returns a parser that matches {@code character}.
      *
      * @param character The character to match.
-     * @return A parser that matches {@code character}.
+     *
+     * @return A {@link CharacterParser} that matches {@code character}.
      */
     public static CharacterParser literal(char character) {
         return new CharacterParser((c) -> c == character);
@@ -51,7 +52,7 @@ public final class Parsers {
      * @param firstCharacter The first character in the range.
      * @param firstCharacter The last character in the range.
      *
-     * @return A parser that matches the range [{@code firstCharacter}, {@code lastCharacter}].
+     * @return A {@link CharacterParser} that matches the range [{@code firstCharacter}, {@code lastCharacter}].
      */
     public static CharacterParser range(char firstCharacter, char lastCharacter) {
         return new CharacterParser((character) -> character >= firstCharacter && character <= lastCharacter);
@@ -62,7 +63,7 @@ public final class Parsers {
      *
      * @param characters A set of characters.
      *
-     * @return A parser that matches any of the specified characters
+     * @return A {@link CharacterParser} that matches any of the specified characters.
      */
     public static CharacterParser anyOf(Character... characters) {
         return anyOf(Set.of(characters));
@@ -77,7 +78,7 @@ public final class Parsers {
      *
      * @param characters A set of characters.
      *
-     * @return A parser that matches none of the specified characters
+     * @return A {@link CharacterParser} that matches none of the specified characters.
      */
     public static CharacterParser noneOf(Character... characters) {
         return noneOf(Set.of(characters));
@@ -89,6 +90,8 @@ public final class Parsers {
 
     /**
      * Returns a parser that matches any character that is a digit.
+     *
+     * @return A {@link CharacterParser} that matches any character that is a digit.
      */
     public static CharacterParser digit() {
         return new CharacterParser(Character::isDigit);
@@ -96,6 +99,8 @@ public final class Parsers {
 
     /**
      * Returns a parser that matches any character that is a letter.
+     *
+     * @return A {@link CharacterParser} that matches any character that is a letter.
      */
     public static CharacterParser letter() {
         return new CharacterParser(Character::isLetter);
@@ -103,6 +108,8 @@ public final class Parsers {
 
     /**
      * Returns a parser that matches any character that is a letter or digit.
+     *
+     * @return A {@link CharacterParser} that matches any character that is a letter or digit.
      */
     public static CharacterParser letterOrDigit() {
         return new CharacterParser(Character::isLetterOrDigit);
@@ -110,6 +117,8 @@ public final class Parsers {
 
     /**
      * Returns a parser that matches any character that is a lowercase letter.
+     *
+     * @return A {@link CharacterParser} that matches any character that is a lowercase letter.
      */
     public static CharacterParser lowerCaseLetter() {
         return new CharacterParser(Character::isLowerCase);
@@ -117,6 +126,8 @@ public final class Parsers {
 
     /**
      * Returns a parser that matches any character that is a uppercase letter.
+     *
+     * @return A {@link CharacterParser} that matches any character that is a uppercase letter.
      */
     public static CharacterParser upperCaseLetter() {
         return new CharacterParser(Character::isUpperCase);
@@ -124,6 +135,8 @@ public final class Parsers {
 
     /**
      * Returns a parser that matches any character that is white space.
+     *
+     * @return A {@link CharacterParser} that matches any character that is white space.
      */
     public static CharacterParser whitespace() {
         return new CharacterParser(Character::isWhitespace);
@@ -194,7 +207,7 @@ public final class Parsers {
             new SequenceParser<>(left,
                 new SequenceParser<>(middle, right)
             ),
-            match -> Triple.of(match.first(), match.second())
+            match -> Triple.of(match.first(), match.second().first(), match.second().second())
         );
     }
 
@@ -220,14 +233,38 @@ public final class Parsers {
         return new OptionalParser<>(parser);
     }
 
+    /**
+     * Creates a parser that matches zero or more occurrences of the given parser.
+     *
+     * @param <T> the type of the elements parsed by the given parser.
+     * @param parser the parser to be repeated zero or more times.
+     * @return a RepeatParser that matches zero or more occurrences of the given parser.
+     */
     public static <T> RepeatParser<T> zeroOrMore(Parser<T> parser) {
         return new RepeatParser<>(parser, 0, Integer.MAX_VALUE);
     }
 
+    /**
+     * Creates a parser that matches one or more occurrences of the specified parser.
+     *
+     * @param <T> the type of the elements parsed by the specified parser.
+     * @param parser the parser to be repeated.
+     * @return a RepeatParser that matches one or more occurrences of the specified parser.
+     */
     public static <T> RepeatParser<T> oneOrMore(Parser<T> parser) {
         return new RepeatParser<>(parser, 1, Integer.MAX_VALUE);
     }
 
+    /**
+     * Creates a RepeatParser that parses the input using the specified parser
+     * a number of times between the given lower and upper bounds.
+     *
+     * @param <T> the type of the elements being parsed
+     * @param parser the parser to be repeated
+     * @param lowerBound the minimum number of times the parser should be applied
+     * @param upperBound the maximum number of times the parser should be applied
+     * @return a RepeatParser that applies the given parser between lowerBound and upperBound times
+     */
     public static <T> RepeatParser<T> repeat(Parser<T> parser, int lowerBound, int upperBound) {
         return new RepeatParser<>(parser, lowerBound, upperBound);
     }
@@ -240,6 +277,11 @@ public final class Parsers {
         return new TransformParser<>(parser, transform);
     }
 
+    /**
+     * Returns a parser that omits the parsed value of the specified parser.
+     *
+     * @return A {@link OmitParser} that matches any character that is white space.
+     */
     public static <T> OmitParser<T> omit(Parser<T> parser) {
         return new OmitParser<>(parser);
     }

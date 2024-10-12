@@ -23,15 +23,19 @@ import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 /**
  * Defines the requirements for all parsers.
+ *
+ * @param <T> The type of the object returned by a parser on a successfull match.
  */
 public interface Parser<T> {
 
     /**
-     * Parse the characters provided by the specified scanner.
+     * Parse the characters provided by {@code scanner} as an object of type {@code <T>}.
      *
-     * @param scanner The scanner providing characters.
+     * @param scanner A {@link Scanner} providing characters to be parsed.
      *
-     * @return A {@link ParseResult} indicating whether the parse was successfull or not.
+     * @return A {@link ParseResult.Success} containing the parsed object on a
+     * successfull match, otherwise a {@link ParseResult.Failure} if the parse
+     * failed.
      */
     public ParseResult<T> parse(Scanner scanner);
 
