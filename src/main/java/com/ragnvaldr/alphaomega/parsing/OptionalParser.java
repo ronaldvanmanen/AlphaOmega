@@ -32,6 +32,11 @@ public final class OptionalParser<T> implements Parser<Optional<T>> {
 
     private Parser<T> parser;
 
+    /**
+     * Creates a new {@link OptionalParser}.
+     *
+     * @param parser
+     */
     public OptionalParser(Parser<T> parser) {
         this.parser = parser;
     }

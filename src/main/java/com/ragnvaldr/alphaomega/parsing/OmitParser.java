@@ -40,6 +40,14 @@ public final class OmitParser<T> implements Parser<Nothing> {
         this.parser = parser;
     }
 
+    /**
+     * Parses the input from the given scanner using the specified parser.
+     *
+     * @param scanner The {@link Scanner} providing the input to be parsed.
+     *
+     * @return A {@link ParseResult.Success} if parsing is successful,
+     *         or a {@link ParseResult.Failure} if parsing fails.
+     */
     @Override
     public ParseResult<Nothing> parse(Scanner scanner) {
         var parseResult = parser.parse(scanner);

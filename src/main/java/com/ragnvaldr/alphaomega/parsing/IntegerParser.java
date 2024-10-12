@@ -37,6 +37,18 @@ public final class IntegerParser implements Parser<Integer> {
 
     private int maxDigits;
 
+    /**
+     * Creates an {@link IntegerParser}.
+     *
+     * @param signed    Indicates whether the integer can be signed.
+     * @param radix     The base of the number system (must be between 2 and 36).
+     * @param minDigits The minimum number of digits (must be greater than or equal to 0).
+     * @param maxDigits The maximum number of digits (must be greater than or equal to {@code minDigits}).
+     *
+     * @throws IllegalArgumentException if the {@code radix} is not between 2 and 36,
+     *                                  if {@code minDigits} is less than 0,
+     *                                  or if {@code maxDigits} is less than {@code minDigits}.
+     */
     public IntegerParser(boolean signed, int radix, int minDigits, int maxDigits) {
         if (radix < 2 || radix > 36)
             throw new IllegalArgumentException(
@@ -54,6 +66,13 @@ public final class IntegerParser implements Parser<Integer> {
         this.maxDigits = maxDigits;
     }
 
+    /**
+     * Parses an integer value from the provided scanner.
+     *
+     * @param scanner The {@link Scanner} providing the input to be parsed.
+     *
+     * @return a ParseResult containing the parsed integer if successful, or a failure result if parsing fails
+     */
     @Override
     public ParseResult<Integer> parse(Scanner scanner) {
         int position = scanner.getPosition();
@@ -75,7 +94,7 @@ public final class IntegerParser implements Parser<Integer> {
             if (chr == -1 || !isDigit(chr)){
                 break;
             }
-            var digit = ToDigit(chr);
+            var digit = toDigit(chr);
 
             value = value * radix + digit;
         }
@@ -93,7 +112,7 @@ public final class IntegerParser implements Parser<Integer> {
         return ParseResult.failure();
     }
 
-    private static int ToDigit(char character) {
+    private static int toDigit(char character) {
         if (character >= '0' && character <= '9') {
             return character - '0';
         } else {

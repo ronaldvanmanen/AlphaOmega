@@ -42,6 +42,15 @@ public final class CharacterParser implements Parser<Character> {
         this.predicate = predicate;
     }
 
+    /**
+     * Parses a single character from the provided scanner.
+     *
+     * @param scanner The {@link Scanner} providing the input to be parsed.
+     *
+     * @return A {@link ParseResult.Success} containing the parsed character if
+     *         successful, or a {@link ParseResult.Failure} if the character
+     *         does not match the predicate.
+     */
     public ParseResult<Character> parse(Scanner scanner) {
         var position = scanner.getPosition();
 

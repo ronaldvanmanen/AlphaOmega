@@ -30,6 +30,8 @@ public abstract class ParseResult<T> {
 
         private T value;
 
+        public Success() { }
+
         public Success(T value) {
             this.value = value;
         }
@@ -61,6 +63,17 @@ public abstract class ParseResult<T> {
     }
 
     ParseResult() { }
+
+    /**
+     * Creates a {@link ParseResult} that indicates that successfull match.
+     *
+     * @param <T> The type of value that was parsed by a parser.
+     *
+     * @return A {@link ParseResult} with the specified value.
+     */
+    public static <T> ParseResult<T> success() {
+        return new Success<>();
+    }
 
     /**
      * Creates a {@link ParseResult} that indicates that a parser successfully
@@ -98,9 +111,11 @@ public abstract class ParseResult<T> {
     }
 
     /**
-     * Returns the parsed value.
+     * Returns the parsed value, if any.
      *
-     * @return
+     * @return The parsed value, or {@code null} if no value was parsed.
+     *
+     * @throws NoSuchElementException No value is present because the parse was unsuccessfull.
      */
     public abstract T getValue();
 }

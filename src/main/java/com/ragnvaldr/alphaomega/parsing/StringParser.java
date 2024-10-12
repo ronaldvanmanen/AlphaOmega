@@ -28,10 +28,28 @@ public final class StringParser implements Parser<String> {
 
     private String string;
 
+    /**
+     * Creates a {@link StringParser} that matches the specified {@code string}.
+     *
+     * @param string The string to match.
+     */
     public StringParser(String string) {
         this.string = string;
     }
 
+    /**
+     * Parses the input from the given scanner and attempts to match it with
+     * the expected string. If the input matches the expected string, it returns
+     * a {@link ParseResult.Success} containing the matched string. Otherwise,
+     * it resets the scanner's position to the original position and returns a
+     * {@link ParseResult.Failure}.
+     *
+     * @param scanner The {@link Scanner} providing the input to be parsed.
+     *
+     * @return A {@link ParseResult.Success} containing the matched string if
+     *         the parse was successful, otherwise a {@link ParseResult.Failure}
+     *         if the input did not match.
+     */
     @Override
     public ParseResult<String> parse(Scanner scanner) {
         var position = scanner.getPosition();

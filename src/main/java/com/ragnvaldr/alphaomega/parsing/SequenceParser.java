@@ -44,6 +44,15 @@ public final class SequenceParser<T, S> implements Parser<Pair<T, S>> {
         this.second = right;
     }
 
+    /**
+     * Parses the input from the given scanner using a sequence of two parsers.
+     *
+     * @param scanner The {@link Scanner} providing the input to be parsed.
+     *
+     * @return A {@link ParseResult.Success} containing a {@link Pair} of the
+     *         results from the two parsers if both succeed, or a
+     *         {@link ParseResult.Failure} if either parser fails.
+     */
     @Override
     public ParseResult<Pair<T, S>> parse(Scanner scanner) {
         var position = scanner.getPosition();

@@ -26,6 +26,13 @@ import com.ragnvaldr.alphaomega.scanning.Scanner;
  */
 public final class FailureParser<T> implements Parser<T> {
 
+    /**
+     * Parses no input from the given scanner and immediately returns {@link ParseResult.Failure}.
+     *
+     * @param scanner The {@link Scanner} providing the input to be parsed.
+     *
+     * @return A {@link ParseResult.Failure}.
+     */
     public ParseResult<T> parse(Scanner scanner) {
         return ParseResult.failure();
     }
