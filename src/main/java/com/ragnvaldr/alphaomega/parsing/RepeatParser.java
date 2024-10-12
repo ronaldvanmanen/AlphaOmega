@@ -31,7 +31,7 @@ public final class RepeatParser<T> implements Parser<List<T>> {
     private int lowerBound;
     private int upperBound;
 
-    RepeatParser(Parser<T> parser, int lowerBound, int upperBound) {
+    public RepeatParser(Parser<T> parser, int lowerBound, int upperBound) {
         if (lowerBound < 0 || upperBound < lowerBound) {
             throw new IllegalArgumentException("Invalid bounds");
         }

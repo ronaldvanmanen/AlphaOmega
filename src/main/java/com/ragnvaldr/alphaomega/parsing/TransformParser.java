@@ -34,11 +34,11 @@ public final class TransformParser<TTarget, TSource> implements Parser<TTarget> 
 
     private Function<? super TSource, ? extends TTarget> transform;
 
-    TransformParser(Parser<TSource> parser, Supplier<? extends TTarget> transform) {
+    public TransformParser(Parser<TSource> parser, Supplier<? extends TTarget> transform) {
         this(parser, _ -> transform.get());
     }
 
-    TransformParser(Parser<TSource> parser, Function<? super TSource, ? extends TTarget> transform) {
+    public TransformParser(Parser<TSource> parser, Function<? super TSource, ? extends TTarget> transform) {
         this.parser = parser;
         this.transform = transform;
     }

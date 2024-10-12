@@ -28,7 +28,7 @@ public final class StringParser implements Parser<String> {
 
     private String string;
 
-    StringParser(String string) {
+    public StringParser(String string) {
         this.string = string;
     }
 

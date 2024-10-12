@@ -38,7 +38,7 @@ public final class CharacterParser implements Parser<Character> {
      * character to determine if that character returns a successfull match or
      * not.
      */
-    CharacterParser(Predicate<Character> predicate) {
+    public CharacterParser(Predicate<Character> predicate) {
         this.predicate = predicate;
     }
 

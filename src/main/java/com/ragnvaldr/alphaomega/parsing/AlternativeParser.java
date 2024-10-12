@@ -32,9 +32,9 @@ import com.ragnvaldr.alphaomega.util.Either;
  */
 public final class AlternativeParser<T, S> implements Parser<Either<T, S>> {
 
-    private Parser<T> left;
+    private Parser<T> first;
 
-    private Parser<S> right;
+    private Parser<S> second;
 
     /**
      * Creates a {@link AlternativeParser} with the specified operands.
@@ -42,28 +42,28 @@ public final class AlternativeParser<T, S> implements Parser<Either<T, S>> {
      * @param first The first alternative.
      * @param second The second alternative.
      */
-    AlternativeParser(Parser<T> left, Parser<S> right) {
-        this.left = left;
-        this.right = right;
+    public AlternativeParser(Parser<T> first, Parser<S> second) {
+        this.first = first;
+        this.second = second;
     }
 
     @Override
     public ParseResult<Either<T, S>> parse(Scanner scanner) {
         var position = scanner.getPosition();
 
-        var leftParseResult = left.parse(scanner);
-        if (leftParseResult.isSuccess()) {
+        var firstParseResult = first.parse(scanner);
+        if (firstParseResult.isSuccess()) {
             return ParseResult.success(
-                Either.left(leftParseResult.getValue())
+                Either.left(firstParseResult.getValue())
             );
         }
 
         scanner.setPosition(position);
 
-        var rightParseResult = right.parse(scanner);
-        if (rightParseResult.isSuccess()) {
+        var secondParseResult = second.parse(scanner);
+        if (secondParseResult.isSuccess()) {
             return ParseResult.success(
-                Either.right(rightParseResult.getValue())
+                Either.right(secondParseResult.getValue())
             );
         }
 

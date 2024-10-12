@@ -37,7 +37,7 @@ public final class IntegerParser implements Parser<Integer> {
 
     private int maxDigits;
 
-    IntegerParser(boolean signed, int radix, int minDigits, int maxDigits) {
+    public IntegerParser(boolean signed, int radix, int minDigits, int maxDigits) {
         if (radix < 2 || radix > 36)
             throw new IllegalArgumentException(
                 "The radix base must lie between 2 and 36.");

@@ -29,33 +29,33 @@ import com.ragnvaldr.alphaomega.util.Pair;
  */
 public final class SequenceParser<T, S> implements Parser<Pair<T, S>> {
 
-    private Parser<T> left;
+    private Parser<T> first;
 
-    private Parser<S> right;
+    private Parser<S> second;
 
     /**
-     * Creates a new {@link SequenceParser} with the specified operands.
+     * Creates a new {@link SequenceParser} with the specified parsers.
      *
-     * @param left The left operand.
-     * @param right The right operand.
+     * @param left The first parser.
+     * @param right The second parser.
      */
-    SequenceParser(Parser<T> left, Parser<S> right) {
-        this.left = left;
-        this.right = right;
+    public SequenceParser(Parser<T> left, Parser<S> right) {
+        this.first = left;
+        this.second = right;
     }
 
     @Override
     public ParseResult<Pair<T, S>> parse(Scanner scanner) {
         var position = scanner.getPosition();
 
-        var leftParseResult = left.parse(scanner);
-        if (leftParseResult.isSuccess()) {
-            var rightParseResult = right.parse(scanner);
-            if (rightParseResult.isSuccess()) {
+        var firstParseResult = first.parse(scanner);
+        if (firstParseResult.isSuccess()) {
+            var secondParseResult = second.parse(scanner);
+            if (secondParseResult.isSuccess()) {
                 return ParseResult.success(
                     Pair.of(
-                        leftParseResult.getValue(),
-                        rightParseResult.getValue())
+                        firstParseResult.getValue(),
+                        secondParseResult.getValue())
                 );
             }
         }

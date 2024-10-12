@@ -20,6 +20,7 @@
 package com.ragnvaldr.alphaomega.util;
 
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 
 /**
  * The {@link Either} class is represents a value of one of two possible types.
@@ -118,11 +119,11 @@ public abstract class Either<T, S> {
 
     public abstract S getRight();
 
-    public static <T> T getLeftOrRight(Either<T, T> value) {
-        if (value.isLeft()) {
-            return value.getLeft();
+    public <R> R getEither(Function<T, R> left, Function<S, R> right) {
+        if (isLeft()) {
+            return left.apply(getLeft());
         } else {
-            return value.getRight();
+            return right.apply(getRight());
         }
     }
 }

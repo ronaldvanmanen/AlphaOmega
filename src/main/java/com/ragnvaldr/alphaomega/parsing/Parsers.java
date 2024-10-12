@@ -24,10 +24,9 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.ragnvaldr.alphaomega.util.Either;
+import com.ragnvaldr.alphaomega.util.Nothing;
 import com.ragnvaldr.alphaomega.util.Pair;
 import com.ragnvaldr.alphaomega.util.Triple;
-import com.ragnvaldr.alphaomega.util.Unused;
 
 /**
  * The {@link Parsers} class consists exclusively of static factory methods that can be used to create and combine parsers.
@@ -166,7 +165,7 @@ public final class Parsers {
                 new AlternativeParser<>(
                     head, tail.get(0)
                 ),
-                Either::getLeftOrRight
+                match -> match.getEither(l -> l, r -> r)
             );
         }
 
@@ -174,7 +173,7 @@ public final class Parsers {
             new AlternativeParser<>(
                 head, anyOf(tail.get(0), tail.subList(1, tailSize))
             ),
-            Either::getLeftOrRight
+            match -> match.getEither(l -> l, r -> r)
         );
     }
 
@@ -183,11 +182,11 @@ public final class Parsers {
     }
 
     public static <T, S> Parser<T> sequence(Parser<T> left, OmitParser<S> right) {
-        return new TransformParser<>(new SequenceParser<T, Unused>(left, right), Pair::first);
+        return new TransformParser<>(new SequenceParser<T, Nothing>(left, right), Pair::first);
     }
 
     public static <T, S> Parser<S> sequence(OmitParser<T> left, Parser<S> right) {
-        return new TransformParser<>(new SequenceParser<Unused, S>(left, right), Pair::second);
+        return new TransformParser<>(new SequenceParser<Nothing, S>(left, right), Pair::second);
     }
 
     public static <T, S, R> Parser<Triple<T, S, R>> sequence(Parser<T> left, Parser<S> middle, Parser<R> right) {

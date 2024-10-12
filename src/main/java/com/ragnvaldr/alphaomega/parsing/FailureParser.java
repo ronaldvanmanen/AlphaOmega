@@ -26,8 +26,6 @@ import com.ragnvaldr.alphaomega.scanning.Scanner;
  */
 public final class FailureParser<T> implements Parser<T> {
 
-    FailureParser() {}
-
     public ParseResult<T> parse(Scanner scanner) {
         return ParseResult.failure();
     }

@@ -20,9 +20,9 @@
 package com.ragnvaldr.alphaomega.util;
 
 /**
- * The {@link Unused} class is used to signal that the value of the parse
+ * The {@link Nothing} class is used to signal that the value of the parse
  * result returned on a successfull match by a parse is not used.
  */
-public final class Unused {
-    private Unused() {}
+public final class Nothing {
+    private Nothing() {}
 }
