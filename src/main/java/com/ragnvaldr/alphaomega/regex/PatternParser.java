@@ -23,7 +23,7 @@ import com.ragnvaldr.alphaomega.parsing.*;
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 import com.ragnvaldr.alphaomega.util.Range;
 
-import static com.ragnvaldr.alphaomega.parsing.Parsers.*;
+import static com.ragnvaldr.alphaomega.parsing.Parse.*;
 
 final class PatternParser implements Parser<Pattern> {
 

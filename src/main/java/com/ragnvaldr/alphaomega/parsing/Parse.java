@@ -29,11 +29,11 @@ import com.ragnvaldr.alphaomega.util.Pair;
 import com.ragnvaldr.alphaomega.util.Triple;
 
 /**
- * The {@link Parsers} class consists exclusively of static factory methods that can be used to create and combine parsers.
+ * The {@link Parse} class consists exclusively of static factory methods that can be used to create and combine parsers.
  */
-public final class Parsers {
+public final class Parse {
 
-    private Parsers() {}
+    private Parse() {}
 
     /**
      * Returns a parser that matches {@code character}.
@@ -53,8 +53,8 @@ public final class Parsers {
      *
      * @return A {@link CharacterParser} that matches {@code sequence}.
      */
-    public static CharacterSequenceParser literal(CharSequence sequence) {
-        return new CharacterSequenceParser(sequence);
+    public static CharSequenceParser literal(CharSequence sequence) {
+        return new CharSequenceParser(sequence);
     }
 
     /**
