@@ -36,7 +36,7 @@ import net.jqwik.api.Provide;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-final class StringParserTests {
+final class CharSequenceParserTests {
 
     final String source = "Hello, World!";
 
@@ -61,7 +61,7 @@ final class StringParserTests {
     void parseSucceeds(@ForAll("parseSucceedsFor") String value) {
         var scanner = new Scanner(source);
         var initialPosition = scanner.getPosition();
-        var parser = new StringParser(value);
+        var parser = new CharSequenceParser(value);
 
         var parseResult = parser.parse(scanner);
 
@@ -79,7 +79,7 @@ final class StringParserTests {
     void parseFails(@ForAll("parseFailsFor") String value) {
         var scanner = new Scanner(source);
         var initialPosition = scanner.getPosition();
-        var parser = new StringParser(value);
+        var parser = new CharSequenceParser(value);
 
         var parseResult = parser.parse(scanner);
 
@@ -97,7 +97,7 @@ final class StringParserTests {
     void parseFailsWhenEOF() {
         var scanner = new Scanner("");
         var initialPosition = scanner.getPosition();
-        var parser = new StringParser("Hello, World!");
+        var parser = new CharSequenceParser("Hello, World!");
 
         var parseResult = parser.parse(scanner);
 

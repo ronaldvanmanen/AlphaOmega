@@ -36,8 +36,8 @@ final class AlternativeParserTests {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
         var parser = new AlternativeParser<>(
-            new StringParser("Hello"),
-            new StringParser("Goodbye")
+            new CharSequenceParser("Hello"),
+            new CharSequenceParser("Goodbye")
         );
 
         var parseResult = parser.parse(scanner);
@@ -59,8 +59,8 @@ final class AlternativeParserTests {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
         var parser = new AlternativeParser<>(
-            new StringParser("Goodbye"),
-            new StringParser("Hello")
+            new CharSequenceParser("Goodbye"),
+            new CharSequenceParser("Hello")
         );
 
         var parseResult = parser.parse(scanner);
@@ -82,8 +82,8 @@ final class AlternativeParserTests {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
         var parser = new AlternativeParser<>(
-            new StringParser("Goodbye"),
-            new StringParser("Ciao")
+            new CharSequenceParser("Goodbye"),
+            new CharSequenceParser("Ciao")
         );
 
         var parseResult = parser.parse(scanner);

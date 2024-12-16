@@ -47,6 +47,17 @@ public final class Parsers {
     }
 
     /**
+     * Returns a parser that matches {@code sequence}.
+     *
+     * @param sequence The character sequence to match.
+     *
+     * @return A {@link CharacterParser} that matches {@code sequence}.
+     */
+    public static CharacterSequenceParser literal(CharSequence sequence) {
+        return new CharacterSequenceParser(sequence);
+    }
+
+    /**
      * Returns a parser that matches a range of characters.
      *
      * @param firstCharacter The first character in the range.
@@ -144,10 +155,6 @@ public final class Parsers {
 
     public static CharacterParser not(CharacterParser parser) {
         return parser.negate();
-    }
-
-    public static StringParser literal(String literal) {
-        return new StringParser(literal);
     }
 
     public static IntegerParser signedInteger() {

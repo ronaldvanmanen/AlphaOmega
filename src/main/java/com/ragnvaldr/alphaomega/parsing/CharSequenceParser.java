@@ -22,19 +22,19 @@ package com.ragnvaldr.alphaomega.parsing;
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 /**
- * The {@link StringParser} class is a parser that matches a character string.
+ * The {@link CharSequenceParser} class is a parser that matches a character sequence.
  */
-public final class StringParser implements Parser<String> {
+public final class CharSequenceParser implements Parser<CharSequence> {
 
-    private String string;
+    private CharSequence sequence;
 
     /**
-     * Creates a {@link StringParser} that matches the specified {@code string}.
+     * Creates a {@link CharSequenceParser} that matches the specified {@code sequence}.
      *
-     * @param string The string to match.
+     * @param sequence The string to match.
      */
-    public StringParser(String string) {
-        this.string = string;
+    public CharSequenceParser(CharSequence sequence) {
+        this.sequence = sequence;
     }
 
     /**
@@ -51,14 +51,14 @@ public final class StringParser implements Parser<String> {
      *         if the input did not match.
      */
     @Override
-    public ParseResult<String> parse(Scanner scanner) {
+    public ParseResult<CharSequence> parse(Scanner scanner) {
         var position = scanner.getPosition();
 
         var builder = new StringBuilder();
 
-        for (var index = 0; index < string.length(); ++index) {
+        for (var index = 0; index < sequence.length(); ++index) {
             var character = scanner.read();
-            if (character == string.charAt(index)) {
+            if (character == sequence.charAt(index)) {
                 builder.append((char)character);
             } else {
                 scanner.setPosition(position);
