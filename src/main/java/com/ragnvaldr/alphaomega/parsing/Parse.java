@@ -165,8 +165,8 @@ public final class Parse {
         return new IntegerParser(false, 10, 1, Integer.MAX_VALUE);
     }
 
-    public static <T, S> AlternativeParser<T, S> either(Parser<T> left, Parser<S> right) {
-        return new AlternativeParser<>(left, right);
+    public static <T, S> ChoiceParser<T, S> either(Parser<T> left, Parser<S> right) {
+        return new ChoiceParser<>(left, right);
     }
 
     @SafeVarargs
@@ -182,7 +182,7 @@ public final class Parse {
 
         if (tailSize == 1) {
             return new TransformParser<>(
-                new AlternativeParser<>(
+                new ChoiceParser<>(
                     head, tail.get(0)
                 ),
                 match -> match.getEither(l -> l, r -> r)
@@ -190,7 +190,7 @@ public final class Parse {
         }
 
         return new TransformParser<>(
-            new AlternativeParser<>(
+            new ChoiceParser<>(
                 head, anyOf(tail.get(0), tail.subList(1, tailSize))
             ),
             match -> match.getEither(l -> l, r -> r)

@@ -29,13 +29,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-final class AlternativeParserTests {
+final class ChoiceParserTests {
 
     @Test
     void parseSucceedsWhenLeftParserMatches() {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
-        var parser = new AlternativeParser<>(
+        var parser = new ChoiceParser<>(
             new CharSequenceParser("Hello"),
             new CharSequenceParser("Goodbye")
         );
@@ -58,7 +58,7 @@ final class AlternativeParserTests {
     void parseSucceedsWhenRightParserMatches() {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
-        var parser = new AlternativeParser<>(
+        var parser = new ChoiceParser<>(
             new CharSequenceParser("Goodbye"),
             new CharSequenceParser("Hello")
         );
@@ -81,7 +81,7 @@ final class AlternativeParserTests {
     void parseFailsWhenBothParserDontMatch() {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
-        var parser = new AlternativeParser<>(
+        var parser = new ChoiceParser<>(
             new CharSequenceParser("Goodbye"),
             new CharSequenceParser("Ciao")
         );

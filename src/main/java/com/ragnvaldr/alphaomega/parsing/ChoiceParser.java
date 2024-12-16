@@ -23,26 +23,26 @@ import com.ragnvaldr.alphaomega.scanning.Scanner;
 import com.ragnvaldr.alphaomega.util.Either;
 
 /**
- * The {@link AlternativeParser} class is a parser that returns the parse result
+ * The {@link ChoiceParser} class is a parser that returns the parse result
  * of either one of two parsers.
  *
  * The left parser is tried first and if, and only if, it succeeds it's result
  * will be returned immediately. Otherwise, the right operand will be tried and
  * if, and only if, successfully matched it's result will be returned.
  */
-public final class AlternativeParser<T, S> implements Parser<Either<T, S>> {
+public final class ChoiceParser<T, S> implements Parser<Either<T, S>> {
 
     private Parser<T> first;
 
     private Parser<S> second;
 
     /**
-     * Creates a {@link AlternativeParser} with the specified parsers.
+     * Creates a {@link ChoiceParser} with the specified parsers.
      *
      * @param first The parser to try first.
      * @param second The parser to try second.
      */
-    public AlternativeParser(Parser<T> first, Parser<S> second) {
+    public ChoiceParser(Parser<T> first, Parser<S> second) {
         this.first = first;
         this.second = second;
     }
