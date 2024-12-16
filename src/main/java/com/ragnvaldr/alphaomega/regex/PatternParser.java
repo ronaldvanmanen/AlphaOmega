@@ -21,7 +21,7 @@ package com.ragnvaldr.alphaomega.regex;
 
 import com.ragnvaldr.alphaomega.parsing.*;
 import com.ragnvaldr.alphaomega.scanning.Scanner;
-import com.ragnvaldr.alphaomega.util.*;
+import com.ragnvaldr.alphaomega.util.Range;
 
 import static com.ragnvaldr.alphaomega.parsing.Parsers.*;
 
@@ -33,7 +33,7 @@ final class PatternParser implements Parser<Pattern> {
 
     private final Identifier<Pattern> piece = new Identifier<>();
 
-    private final Identifier<Quantifier> quantifier = new Identifier<>();
+    private final Identifier<Range> quantifier = new Identifier<>();
 
     private final Identifier<Range> quantity = new Identifier<>();
 
@@ -137,33 +137,20 @@ final class PatternParser implements Parser<Pattern> {
                         return atom;
                     }
 
-                    var quantifier = optionalQuantifier.get();
-                    switch (quantifier.getType()) {
-                        case OPTIONAL: return Patterns.zeroOrOne(atom);
-                        case ZERO_OR_MORE: return Patterns.zeroOrMore(atom);
-                        case ONE_OR_MORE: return Patterns.oneOrMore(atom);
-                        case RANGE:
-                            var range = quantifier.getRange();
-                            var minimum = range.getMinimum();
-                            var maximum = range.getMaximum();
-                            return Patterns.repeat(atom, minimum, maximum);
-                        default:
-                            throw new PatternSyntaxException("Invalid range");
-                    }
+                    var range = optionalQuantifier.get();
+                    var repetition = Patterns.repeat(atom, range.getMinimum(), range.getMaximum());
+                    return repetition;
                 }
             )
         );
 
         quantifier.is(
             anyOf(
-                transform(question, Quantifier::optional),
-                transform(star, Quantifier::zeroOrMore),
-                transform(plus, Quantifier::oneOrMore),
-                transform(
-                    sequence(
-                        omit(leftBrace), quantity, omit(rightBrace)
-                    ),
-                    Quantifier::range
+                transform(questionMark, _ -> Range.closed(0, 1)),
+                transform(star, _ -> Range.atLeast(0)),
+                transform(plus, _ -> Range.atLeast(1)),
+                sequence(
+                    omit(leftBrace), quantity, omit(rightBrace)
                 )
             )
         );
@@ -174,7 +161,7 @@ final class PatternParser implements Parser<Pattern> {
 
         quantityRange.is(
             transform(
-                sequence(integer, omit(comma), integer), Range::of
+                sequence(integer, omit(comma), integer), Range::closed
             )
         );
 
@@ -185,9 +172,7 @@ final class PatternParser implements Parser<Pattern> {
         );
 
         quantityExact.is(
-            transform(
-                integer, Range::singleton
-            )
+            transform(integer, Range::singleton)
         );
 
         atom.is(

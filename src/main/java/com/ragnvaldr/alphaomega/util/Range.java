@@ -45,11 +45,11 @@ public final class Range {
         return maximum;
     }
 
-    public static Range of(int lowerBound, int upperBound) {
+    public static Range closed(int lowerBound, int upperBound) {
         return new Range(lowerBound, upperBound);
     }
 
-    public static Range of(Pair<Integer, Integer> bounds) {
+    public static Range closed(Pair<Integer, Integer> bounds) {
         return new Range(bounds.first(), bounds.second());
     }
 
