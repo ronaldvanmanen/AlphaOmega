@@ -25,24 +25,24 @@ junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jun
 
 jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
 
-pitest = "org.pitest:pitest:1.17.0"
+pitest = "org.pitest:pitest:1.17.2"
 
 pitest-junit5-plugin = "org.pitest:pitest-junit5-plugin:1.2.1"
 
-spring-boot-starter-actuator = "org.springframework.boot:spring-boot-starter-actuator:3.3.4"
+spring-boot-starter-actuator = "org.springframework.boot:spring-boot-starter-actuator:3.4.0"
 
-spring-shell-starter = "org.springframework.shell:spring-shell-starter:3.3.3"
+spring-shell-starter = "org.springframework.shell:spring-shell-starter:3.4.0"
 
-spring-boot-dependencies = "org.springframework.boot:spring-boot-dependencies:3.3.4"
+spring-boot-dependencies = "org.springframework.boot:spring-boot-dependencies:3.4.0"
 
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 
-spring-boot-starter-test = "org.springframework.boot:spring-boot-starter-test:3.3.4"
+spring-boot-starter-test = "org.springframework.boot:spring-boot-starter-test:3.4.0"
 
-spring-shell-starter-test = "org.springframework.shell:spring-shell-starter-test:3.3.3"
+spring-shell-starter-test = "org.springframework.shell:spring-shell-starter-test:3.4.0"
 
-jqwik = "net.jqwik:jqwik:1.9.1"
+jqwik = "net.jqwik:jqwik:1.9.2"
 
-junit-platform-native = "org.graalvm.buildtools:junit-platform-native:0.10.3"
+junit-platform-native = "org.graalvm.buildtools:junit-platform-native:0.10.4"
 
-annotations = "org.jetbrains:annotations:23.0.0"
+annotations = "org.jetbrains:annotations:26.0.1"
