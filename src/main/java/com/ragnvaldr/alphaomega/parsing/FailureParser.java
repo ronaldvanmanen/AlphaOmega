@@ -24,7 +24,7 @@ import com.ragnvaldr.alphaomega.scanning.Scanner;
 /**
  * The {@link FailureParser} class is a parser that matches nothing.
  */
-public final class FailureParser<T> implements Parser<T> {
+final class FailureParser<T> implements Parser<T> {
 
     /**
      * Parses no input from the given scanner and immediately returns {@link ParseResult.Failure}.

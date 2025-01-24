@@ -61,7 +61,7 @@ final class CharSequenceParserTests {
     void parseSucceeds(@ForAll("parseSucceedsFor") String value) {
         var scanner = new Scanner(source);
         var initialPosition = scanner.getPosition();
-        var parser = new CharSequenceParser(value);
+        var parser = new CharacterSequenceParser(value);
 
         var parseResult = parser.parse(scanner);
 
@@ -79,7 +79,7 @@ final class CharSequenceParserTests {
     void parseFails(@ForAll("parseFailsFor") String value) {
         var scanner = new Scanner(source);
         var initialPosition = scanner.getPosition();
-        var parser = new CharSequenceParser(value);
+        var parser = new CharacterSequenceParser(value);
 
         var parseResult = parser.parse(scanner);
 
@@ -97,7 +97,7 @@ final class CharSequenceParserTests {
     void parseFailsWhenEOF() {
         var scanner = new Scanner("");
         var initialPosition = scanner.getPosition();
-        var parser = new CharSequenceParser("Hello, World!");
+        var parser = new CharacterSequenceParser("Hello, World!");
 
         var parseResult = parser.parse(scanner);
 

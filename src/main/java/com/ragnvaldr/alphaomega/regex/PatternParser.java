@@ -67,6 +67,8 @@ final class PatternParser implements Parser<Pattern> {
 
     private final Identifier<CharacterPattern> wildcardEscape = new Identifier<>();
 
+    private final Identifier<Pattern> captureGroup = new Identifier<>();
+
     private final Identifier<Character> pipe = new Identifier<>();
 
     private final Identifier<Character> questionMark = new Identifier<>();
@@ -98,11 +100,11 @@ final class PatternParser implements Parser<Pattern> {
     public PatternParser() {
 
         regex.is(
-            transform(
+            map(
                 sequence(branch,
                     zeroOrMore(
                         sequence(
-                            omit(pipe), optional(branch)
+                            pipe, zeroOrOne(branch)
                         )
                     )
                 ),
@@ -110,7 +112,7 @@ final class PatternParser implements Parser<Pattern> {
                     var firstBranch = match.first();
                     var optionalBranches = match.second();
                     var pattern = optionalBranches.stream()
-                        .map(p -> p.orElseGet(Patterns::emptyString))
+                        .map(pair -> pair.second().orElseGet(Patterns::emptyString))
                         .reduce(firstBranch, (a, b) -> Patterns.anyOf(a, b));
 
                     return pattern;
@@ -119,15 +121,15 @@ final class PatternParser implements Parser<Pattern> {
         );
 
         branch.is(
-            transform(
+            map(
                 oneOrMore(piece), patterns -> Patterns.sequence(patterns)
             )
         );
 
         piece.is(
-            transform(
+            map(
                 sequence(
-                    atom, optional(quantifier)
+                    atom, zeroOrOne(quantifier)
                 ),
                 match -> {
                     var atom = match.first();
@@ -145,66 +147,76 @@ final class PatternParser implements Parser<Pattern> {
         );
 
         quantifier.is(
-            anyOf(
-                transform(questionMark, _ -> Range.closed(0, 1)),
-                transform(star, _ -> Range.atLeast(0)),
-                transform(plus, _ -> Range.atLeast(1)),
-                sequence(
-                    omit(leftBrace), quantity, omit(rightBrace)
+            any(
+                map(questionMark, () -> Range.closed(0, 1)),
+                map(star, () -> Range.atLeast(0)),
+                map(plus, () -> Range.atLeast(1)),
+                map(
+                    sequence(
+                        leftBrace, quantity, rightBrace
+                    )
+                    , triple -> triple.second()
                 )
             )
         );
 
         quantity.is(
-            anyOf(quantityRange, quantityMin, quantityExact)
+            any(quantityRange, quantityMin, quantityExact)
         );
 
         quantityRange.is(
-            transform(
-                sequence(integer, omit(comma), integer), Range::closed
+            map(
+                sequence(
+                    integer, comma, integer
+                )
+                , triple -> Range.closed(triple.first(), triple.third())
             )
         );
 
         quantityMin.is(
-            transform(
-                sequence(integer, omit(comma)), Range::atLeast
+            map(
+                sequence(integer, comma), pair -> Range.atLeast(pair.first())
             )
         );
 
         quantityExact.is(
-            transform(integer, Range::singleton)
+            map(integer, Range::singleton)
         );
 
         atom.is(
-            anyOf(
+            any(
                 normalCharacter,
                 characterClass,
-                sequence(
-                    omit(leftParen), regex, omit(rightParen)
-                )
+                captureGroup
             )
         );
 
         normalCharacter.is(
-            transform(
-                noneOf('.', '\\', '?', '*', '+', '{', '}', '(', ')', '[', ']', '|', '^', '$'), Patterns::character
+            map(
+                except(
+                    '.', '\\', '?', '*', '+', '{', '}', '(', ')', '[', ']', '|', '^', '$'
+                )
+                , Patterns::character
             )
         );
 
         characterClass.is(
-            anyOf(characterClassEscape, characterClassBracketed, wildcardEscape)
+            any(characterClassEscape, characterClassBracketed, wildcardEscape)
         );
 
         characterClassBracketed.is(
-            sequence(
-                omit(leftBracket), characterGroup, omit(rightBracket)
+            map(
+                sequence(
+                    leftBracket, characterGroup, rightBracket
+                )
+                , triple -> triple.second()
             )
         );
 
         characterGroup.is(
-            transform(
+            map(
                 sequence(
-                    optional(circumflex), oneOrMore(anyOf(characterRange, characterClassEscape))
+                    zeroOrOne(circumflex), oneOrMore(any(characterRange, characterClassEscape))
                 ),
                 match -> {
                     var circumflex = match.first();
@@ -219,74 +231,86 @@ final class PatternParser implements Parser<Pattern> {
         );
 
         characterRange.is(
-            anyOf(multiCharacterRange, singleCharacterRange)
+            any(multiCharacterRange, singleCharacterRange)
         );
 
         multiCharacterRange.is(
-            transform(
+            map(
                 sequence(
-                    noneOf('-', '[', ']'), omit(literal('-')), noneOf('-', '[', ']')
-                ),
-                match -> Patterns.range(match.first(), match.second())
+                    except('-', '[', ']'), literal('-'), except('-', '[', ']')
+                )
+                , triplet -> Patterns.range(triplet.first(), triplet.third())
             )
         );
 
         singleCharacterRange.is(
-            transform(
-                noneOf('[', ']'), Patterns::character
+            map(
+                except('[', ']'), Patterns::character
             )
         );
 
         characterClassEscape.is(
-            anyOf(singleCharacterEscape, multiCharacterEscape)
+            any(singleCharacterEscape, multiCharacterEscape)
         );
 
         singleCharacterEscape.is(
-            sequence(
-                omit(literal('\\')),
-                anyOf(
-                    transform(literal('a'), () -> Patterns.character('\u0007')),
-                    transform(literal('e'), () -> Patterns.character('\u001B')),
-                    transform(literal('f'), () -> Patterns.character('\f')),
-                    transform(literal('n'), () -> Patterns.character('\n')),
-                    transform(literal('r'), () -> Patterns.character('\r')),
-                    transform(literal('t'), () -> Patterns.character('\t')),
-                    transform(literal('\\'), () -> Patterns.character('\\')),
-                    transform(literal('|'), () -> Patterns.character('|')),
-                    transform(literal('.'), () -> Patterns.character('.')),
-                    transform(literal('-'), () -> Patterns.character('-')),
-                    transform(literal('^'), () -> Patterns.character('^')),
-                    transform(literal('$'), () -> Patterns.character('$')),
-                    transform(literal('?'), () -> Patterns.character('?')),
-                    transform(literal('*'), () -> Patterns.character('*')),
-                    transform(literal('+'), () -> Patterns.character('+')),
-                    transform(literal('{'), () -> Patterns.character('{')),
-                    transform(literal('}'), () -> Patterns.character('}')),
-                    transform(literal('('), () -> Patterns.character('(')),
-                    transform(literal(')'), () -> Patterns.character(')')),
-                    transform(literal('['), () -> Patterns.character('[')),
-                    transform(literal(']'), () -> Patterns.character(']'))
-                )
+            map(
+                sequence(
+                    literal('\\'),
+                    any(
+                        map(literal('a'), () -> Patterns.character('\u0007')),
+                        map(literal('e'), () -> Patterns.character('\u001B')),
+                        map(literal('f'), () -> Patterns.character('\f')),
+                        map(literal('n'), () -> Patterns.character('\n')),
+                        map(literal('r'), () -> Patterns.character('\r')),
+                        map(literal('t'), () -> Patterns.character('\t')),
+                        map(literal('\\'), () -> Patterns.character('\\')),
+                        map(literal('|'), () -> Patterns.character('|')),
+                        map(literal('.'), () -> Patterns.character('.')),
+                        map(literal('-'), () -> Patterns.character('-')),
+                        map(literal('^'), () -> Patterns.character('^')),
+                        map(literal('$'), () -> Patterns.character('$')),
+                        map(literal('?'), () -> Patterns.character('?')),
+                        map(literal('*'), () -> Patterns.character('*')),
+                        map(literal('+'), () -> Patterns.character('+')),
+                        map(literal('{'), () -> Patterns.character('{')),
+                        map(literal('}'), () -> Patterns.character('}')),
+                        map(literal('('), () -> Patterns.character('(')),
+                        map(literal(')'), () -> Patterns.character(')')),
+                        map(literal('['), () -> Patterns.character('[')),
+                        map(literal(']'), () -> Patterns.character(']'))
+                    )
+                ),
+                pair -> pair.second()
             )
         );
 
         multiCharacterEscape.is(
-            sequence(
-                omit(literal('\\')),
-                anyOf(
-                    transform(literal('d'), () -> Patterns.digit()),
-                    transform(literal('D'), () -> Patterns.digit().negate()),
-                    transform(literal('s'), () -> Patterns.whitespace()),
-                    transform(literal('S'), () -> Patterns.whitespace().negate()),
-                    transform(literal('w'), () -> Patterns.letterOrDigit()),
-                    transform(literal('W'), () -> Patterns.letterOrDigit().negate())
-                )
+            map(
+                sequence(
+                    literal('\\'),
+                    any(
+                        map(literal('d'), () -> Patterns.digit()),
+                        map(literal('D'), () -> Patterns.digit().negate()),
+                        map(literal('s'), () -> Patterns.whitespace()),
+                        map(literal('S'), () -> Patterns.whitespace().negate()),
+                        map(literal('w'), () -> Patterns.letterOrDigit()),
+                        map(literal('W'), () -> Patterns.letterOrDigit().negate())
+                    )
+                ),
+                pair -> pair.second()
             )
         );
 
         wildcardEscape.is(
-            transform(
+            map(
                 dot, () -> Patterns.any()
+            )
+        );
+
+        captureGroup.is(
+            map(
+                sequence(leftParen, regex, rightParen), triplet -> triplet.second()
             )
         );
 

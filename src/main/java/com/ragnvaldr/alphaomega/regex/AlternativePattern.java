@@ -25,7 +25,7 @@ import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 final class AlternativePattern extends Pattern {
 
-    private Pattern[] patterns = null;
+    private final Pattern[] patterns;
 
     public AlternativePattern(Pattern... patterns) {
         this(List.of(patterns));

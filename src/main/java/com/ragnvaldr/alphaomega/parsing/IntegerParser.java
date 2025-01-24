@@ -27,15 +27,15 @@ import com.ragnvaldr.alphaomega.scanning.Scanner;
  * bases), an optional minimum number of digits, and an optional maximum number
  * of digits.
  */
-public final class IntegerParser implements Parser<Integer> {
+final class IntegerParser implements Parser<Integer> {
 
-    private boolean signed;
+    private final boolean signed;
 
-    private int radix;
+    private final int radix;
 
-    private int minDigits;
+    private final int minDigits;
 
-    private int maxDigits;
+    private final int maxDigits;
 
     /**
      * Creates an {@link IntegerParser}.

@@ -25,7 +25,7 @@ import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 final class CharacterPattern extends Pattern {
 
-    private Predicate<Character> predicate;
+    private final Predicate<Character> predicate;
 
     public CharacterPattern(Predicate<Character> predicate) {
         this.predicate = predicate;

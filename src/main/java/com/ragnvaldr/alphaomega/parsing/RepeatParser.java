@@ -31,11 +31,11 @@ import com.ragnvaldr.alphaomega.scanning.Scanner;
  *
  * @param <T> The type of elements to be parsed.
  */
-public final class RepeatParser<T> implements Parser<List<T>> {
+final class RepeatParser<T> implements Parser<List<T>> {
 
-    private Parser<T> parser;
-    private int lowerBound;
-    private int upperBound;
+    private final Parser<T> parser;
+    private final int lowerBound;
+    private final int upperBound;
 
     /**
      * Creates a {@link RepeatParser} with the specified parser and bounds.

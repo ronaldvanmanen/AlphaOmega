@@ -30,11 +30,11 @@ import com.ragnvaldr.alphaomega.util.Either;
  * will be returned immediately. Otherwise, the right operand will be tried and
  * if, and only if, successfully matched it's result will be returned.
  */
-public final class ChoiceParser<T, S> implements Parser<Either<T, S>> {
+final class ChoiceParser<T, S> implements Parser<Either<T, S>> {
 
-    private Parser<T> first;
+    private final Parser<T> first;
 
-    private Parser<S> second;
+    private final Parser<S> second;
 
     /**
      * Creates a {@link ChoiceParser} with the specified parsers.

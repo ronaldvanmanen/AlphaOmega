@@ -28,9 +28,9 @@ import com.ragnvaldr.alphaomega.scanning.Scanner;
  * of another parser when that parser is successfully matched. Otherwise, the
  * {@link OptionalParser} will return an empty parse result.
  */
-public final class OptionalParser<T> implements Parser<Optional<T>> {
+final class OptionalParser<T> implements Parser<Optional<T>> {
 
-    private Parser<T> parser;
+    private final Parser<T> parser;
 
     /**
      * Creates a new {@link OptionalParser}.

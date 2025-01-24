@@ -23,9 +23,9 @@ import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 final class RepeatPattern extends Pattern {
 
-    private Pattern pattern;
-    private int lowerBound;
-    private int upperBound;
+    private final Pattern pattern;
+    private final int lowerBound;
+    private final int upperBound;
 
     public RepeatPattern(Pattern pattern, int lowerBound, int upperBound) {
         if (lowerBound < 0 || upperBound < lowerBound) {

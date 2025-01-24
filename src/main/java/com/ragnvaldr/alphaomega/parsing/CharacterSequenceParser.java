@@ -22,18 +22,18 @@ package com.ragnvaldr.alphaomega.parsing;
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 /**
- * The {@link CharSequenceParser} class is a parser that matches a character sequence.
+ * The {@link CharacterSequenceParser} class is a parser that matches a character sequence.
  */
-public final class CharSequenceParser implements Parser<CharSequence> {
+final class CharacterSequenceParser implements Parser<CharSequence> {
 
-    private CharSequence sequence;
+    private final CharSequence sequence;
 
     /**
-     * Creates a {@link CharSequenceParser} that matches the specified {@code sequence}.
+     * Creates a {@link CharacterSequenceParser} that matches the specified {@code sequence}.
      *
      * @param sequence The string to match.
      */
-    public CharSequenceParser(CharSequence sequence) {
+    public CharacterSequenceParser(CharSequence sequence) {
         this.sequence = sequence;
     }
 

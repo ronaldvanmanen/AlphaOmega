@@ -25,7 +25,7 @@ import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 final class SequencePattern extends Pattern {
 
-    private List<Pattern> patterns;
+    private final List<Pattern> patterns;
 
     public SequencePattern(Pattern... patterns) {
         this(List.of(patterns));

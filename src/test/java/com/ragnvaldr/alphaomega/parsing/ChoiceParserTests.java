@@ -36,8 +36,8 @@ final class ChoiceParserTests {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
         var parser = new ChoiceParser<>(
-            new CharSequenceParser("Hello"),
-            new CharSequenceParser("Goodbye")
+            new CharacterSequenceParser("Hello"),
+            new CharacterSequenceParser("Goodbye")
         );
 
         var parseResult = parser.parse(scanner);
@@ -59,8 +59,8 @@ final class ChoiceParserTests {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
         var parser = new ChoiceParser<>(
-            new CharSequenceParser("Goodbye"),
-            new CharSequenceParser("Hello")
+            new CharacterSequenceParser("Goodbye"),
+            new CharacterSequenceParser("Hello")
         );
 
         var parseResult = parser.parse(scanner);
@@ -82,8 +82,8 @@ final class ChoiceParserTests {
         var scanner = new Scanner("Hello, World!");
         var initialPosition = scanner.getPosition();
         var parser = new ChoiceParser<>(
-            new CharSequenceParser("Goodbye"),
-            new CharSequenceParser("Ciao")
+            new CharacterSequenceParser("Goodbye"),
+            new CharacterSequenceParser("Ciao")
         );
 
         var parseResult = parser.parse(scanner);

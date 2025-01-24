@@ -23,7 +23,7 @@ import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 final class StringPattern extends Pattern {
 
-    private String string;
+    private final String string;
 
     public StringPattern(String string) {
         this.string = string;

@@ -24,11 +24,11 @@ import java.util.function.Predicate;
 import com.ragnvaldr.alphaomega.scanning.Scanner;
 
 /**
- * The {@link CharacterParser} class is a parser that matches single characters.
+ * The {@link CharacterParser} class is a parser that matches a single character.
  */
-public final class CharacterParser implements Parser<Character> {
+final class CharacterParser implements Parser<Character> {
 
-    private Predicate<Character> predicate;
+    private final Predicate<Character> predicate;
 
     /**
      * Creates a new {@link CharacterParser} that uses the specified predicate

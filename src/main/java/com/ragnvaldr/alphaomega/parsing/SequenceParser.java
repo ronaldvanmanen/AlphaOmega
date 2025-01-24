@@ -27,11 +27,11 @@ import com.ragnvaldr.alphaomega.util.Pair;
  * result of the first operand followed by the second operand, if, and only if,
  * both operands successfully match.
  */
-public final class SequenceParser<T, S> implements Parser<Pair<T, S>> {
+final class SequenceParser<T, S> implements Parser<Pair<T, S>> {
 
-    private Parser<T> first;
+    private final Parser<T> first;
 
-    private Parser<S> second;
+    private final Parser<S> second;
 
     /**
      * Creates a new {@link SequenceParser} with the specified parsers.
